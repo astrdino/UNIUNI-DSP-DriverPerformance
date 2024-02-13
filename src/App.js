@@ -1,6 +1,18 @@
-import React, { useEffect, useState} from 'react';
+import React, { Component, useEffect, useState} from 'react';
 import * as XLSX from 'xlsx';
 import './App.css';
+
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './components/HomePage';
+import Login from './components/LoginPage';
+import Dashboard from './components/DashboardPage';
+import ProtectedRoute from './ProtectedRoute';
+// import PrivateRoute from './PrivateRoute';
+
+
+import { AuthProvider} from './AuthContext'; // Adjust the import path as needed
+
 
 function App() {
 
@@ -20,13 +32,32 @@ function App() {
     fetchExcelFile();
   }, []);
 
+  // return (
+  //   <div className="App">
+  //     <header className="App-header">
+  //       test page i do change {cell}
+  //     </header>
+  //   </div>
+  // );
+
+  // return(<div> 
+  //   <Home/>
+  // </div>)
+    
   return (
-    <div className="App">
-      <header className="App-header">
-        test page i do change {cell}
-      </header>
-    </div>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />
+        </Routes>
+      </Router>
+
+    </AuthProvider>
+    
   );
+  
 }
 
 export default App;
