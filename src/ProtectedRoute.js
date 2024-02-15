@@ -18,9 +18,14 @@ import { useAuth } from './AuthContext';
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
 
+  // console.log(user)
+  // console.log(children)
+
   if (!user) {
     return <Navigate to="/login" replace />;
   }
+
+  
 
   return children;
 }

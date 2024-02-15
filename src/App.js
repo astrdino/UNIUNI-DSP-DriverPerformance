@@ -6,8 +6,11 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/HomePage';
 import Login from './components/LoginPage';
+import DSPLogin from './components/DSPLoginPage';
 import Dashboard from './components/DashboardPage';
+import DSPMain from './components/DSPMainPage'
 import ProtectedRoute from './ProtectedRoute';
+import ProtectedRoute_DSP from './ProtectedRoute_DSP';
 // import PrivateRoute from './PrivateRoute';
 
 
@@ -15,6 +18,8 @@ import { AuthProvider} from './AuthContext'; // Adjust the import path as needed
 
 
 function App() {
+
+ 
 
   const [cell, setCell] = useState();
 
@@ -50,11 +55,16 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login/>} />
+          <Route path="/DSPlogin" element={<DSPLogin/>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />
+          <Route path="/DSPMain" element={<ProtectedRoute_DSP><DSPMain/></ProtectedRoute_DSP>} />
+          
+          {/* <Route path="/DSPMain" element={<DSPMain/>} /> */}
         </Routes>
       </Router>
 
     </AuthProvider>
+    
     
   );
   

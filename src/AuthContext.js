@@ -6,11 +6,21 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
+export function useAuth_DSP() {
+  return useContext(AuthContext);
+}
+
 export const AuthProvider = ({ children }) => {
+
+  //Admin
   const [user, setUser] = useState(null);
 
   const login = (username, password) => {
     if (username === 'hello' && password === 'hello') {
+      setUser({ username });
+      return true;
+    }
+    else if(username === 'DSP' && password === 'DSP'){
       setUser({ username });
       return true;
     }
@@ -27,5 +37,11 @@ export const AuthProvider = ({ children }) => {
     logout,
   };
 
+
+  //DSP
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+
+

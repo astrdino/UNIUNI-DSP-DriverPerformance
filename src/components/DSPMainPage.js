@@ -1,12 +1,12 @@
 import React from 'react';
 
-function DashboardPage() {
+function DSPMainPage() {
   return (
     <div>
-      <h1>Dashboard</h1>
+      <h1>DSP Main Page</h1>
       <p>Date </p>
     </div>
   );
 }
 
-export default DashboardPage;
+export default DSPMainPage;

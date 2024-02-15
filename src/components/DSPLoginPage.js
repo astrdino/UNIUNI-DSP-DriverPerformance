@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../AuthContext';
+import { useAuth_DSP } from '../AuthContext';
 
-function LoginPage() {
+function DSPLoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const{login} = useAuth()
+  const{login} = useAuth_DSP()
 
   const handleLogin = () => {
     if (login(username, password)) {
-        navigate('/dashboard');
+        navigate('/DSPMain');
     } else {
       alert('Invalid username or password!');
     }
@@ -18,7 +18,7 @@ function LoginPage() {
 
   return (
     <div>
-      <h1>Admin Login </h1>
+      <h1>DSP Login </h1>
       <input
         type="text"
         placeholder="Username"
@@ -36,4 +36,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default DSPLoginPage;
