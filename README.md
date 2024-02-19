@@ -13,3 +13,12 @@ Uniuni Driver Performance for DSPs
 02/14/2024
 - Apply login account accessing control (One AuthProvider() with different initialized Context) in one script -  "AuthContext"
 - Use different scripts ("ProtectedRoute", "ProtectedRoute_DSP") to make up components for event - "Unauthorized has as to return login page"
+
+02/15/2024
+1. Drop List Routing
+2. XLSX data conditional display and analysis
+
+02/18/2024
+Cloud Storage System Update
+static local directory -> Supabase 
+- Supabase Backend API Configuration ("Update")
