@@ -22,3 +22,6 @@ Uniuni Driver Performance for DSPs
 Cloud Storage System Update
 static local directory -> Supabase 
 - Supabase Backend API Configuration ("Update")
+
+03/02/2024
+Integrated Supabase API to fetch data from the cloud storage and displayed in the web component

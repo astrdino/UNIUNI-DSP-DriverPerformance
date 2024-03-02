@@ -3,11 +3,13 @@ import { Link,useNavigate } from 'react-router-dom';
 
 import * as XLSX from 'xlsx';
 import DateTime from './utility/dateTime';
-import FetchData from './utility/fetchData';
+import {FetchData} from './utility/fetchData';
+import {FetchData_SPBS} from './utility/fetchData_SPBS';
 
 import axios from 'axios';
 
 import { supabase } from '../supabaseClient';
+import { useUser} from "@supabase/auth-helpers-react";
 
 function DashboardPage() {
 
@@ -23,12 +25,13 @@ function DashboardPage() {
   const [loggedIn, setLoggedIn] = useState(false);
 
 
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setFile(file);
   };
 
-
+ 
   
 
   const uploadFileToBucket = async () => {
@@ -70,29 +73,27 @@ function DashboardPage() {
   };
 
 
-  const check = async() =>{
+  // const check = async() =>{
 
-    const user = supabase.auth.getUser();
+  //   const user = supabase.auth.getUser();
 
-    if (user) {
-      const { data, error } = await supabase.storage
-        .from('admin-data-bucket')
+  //   if (user) {
+  //     const { data, error } = await supabase.storage
+  //       .from('admin-data-bucket')
         
 
-      if (error) {
-        console.error('Error fetching data:', error.message);
-      } else {
-        console.log('Data:', data);
-      }
-    } else {
-      console.error('User not authenticated');
-    }
+  //     if (error) {
+  //       console.error('Error fetching data:', error.message);
+  //     } else {
+  //       console.log('Data:', data);
+  //     }
+  //   } else {
+  //     console.error('User not authenticated');
+  //   }
 
-  }
+  // }
 
-  useEffect(() => {
-    
-}, []);
+
 
 // check()
 
@@ -120,11 +121,13 @@ function DashboardPage() {
     <div>
       <h1>Dashboard</h1>
       <p>Date </p>
+      <FetchData_SPBS></FetchData_SPBS>
       <div>
             <input type="file" onChange={handleFileChange} accept=".xls,.xlsx" />
             <button onClick={uploadFileToBucket}>Upload</button>
       </div>
       <FetchData></FetchData>
+      
     </div>
   );
 }
