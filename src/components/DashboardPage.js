@@ -2,11 +2,16 @@ import React, { Component, useEffect, useState} from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 
 import * as XLSX from 'xlsx';
+
+import axios from 'axios';
+
+//Components
 import DateTime from './utility/dateTime';
 import {FetchData} from './utility/fetchData';
 import {FetchData_SPBS} from './utility/fetchData_SPBS';
+import {SPBS_SignInForm} from './utility/SPBS_SignInForm'
 
-import axios from 'axios';
+
 
 import { supabase } from '../supabaseClient';
 import { useUser} from "@supabase/auth-helpers-react";
@@ -43,16 +48,17 @@ function DashboardPage() {
     }
 
     try {
-      const user = supabase.auth.getUser();
+      // const user = supabase.auth.getUser();
 
-      if (!user) {
-        console.error('User not authenticated');
-        alert('User not authenticated. Please log in.');
-        return;
-      }
+      // if (!user) {
+      //   console.error('User not authenticated');
+      //   alert('User not authenticated. Please log in.');
+      //   return;
+      // }
 
-      // Replace 'Main/${file.name}' with your desired path within the storage bucket
+     
       const filePath = `Main/${file.name}`; 
+
       let { data, error } = await supabase.storage
         .from('admin-data-bucket')
         .upload(filePath, file, {
@@ -61,16 +67,65 @@ function DashboardPage() {
         });
 
       if (error) {
+
         throw error;
       }
 
       console.log('File uploaded:', data);
       alert('File uploaded successfully!');
-    } catch (error) {
-      console.error('Upload error:', error.message);
-      alert(`Upload error: ${error.message}`);
+    } 
+    catch (error) {
+
+      console.error('Upsert error:', error.message);
+      alert(`Upsert error: ${error.message}`);
+      throw error
+
+    
     }
+
+
+    
+
   };
+
+
+  // const mappingDateBatch = async () =>{
+
+  // }
+
+  const mappingDateBatch = async ()=>{
+
+    if(file){
+
+      try {
+
+          
+        const{data, error} = await supabase
+        .from('AZ-RD_ASMT')
+        .insert(
+          [
+            {
+              id: 1, Date: '2024-01-01', Batch_Number: 'value3'
+            }
+          ]
+        )   
+
+        if(error){
+          throw error
+        }
+        
+      } catch (error) {
+
+        alert("Failed to add rows to database")
+        alert(error.message)
+      }
+
+
+      //
+
+    }
+   
+  }
 
 
   // const check = async() =>{
@@ -118,17 +173,42 @@ function DashboardPage() {
 
 
   return (
-    <div>
+    <>
+    <div style={{marginBottom: '2em'}}>
       <h1>Dashboard</h1>
-      <p>Date </p>
-      <FetchData_SPBS></FetchData_SPBS>
+      <DateTime></DateTime>
+      
+      <a href='https://dispatch.uniuni.com/' target="_blank">Official Dispatch Map</a>
       <div>
+            <h2>General Upload</h2>
             <input type="file" onChange={handleFileChange} accept=".xls,.xlsx" />
-            <button onClick={uploadFileToBucket}>Upload</button>
+            {/* <button onClick={uploadFileToBucket}>Upload</button> */}
+            <button onClick={async()=>{
+
+              try {
+                await uploadFileToBucket(); 
+                mappingDateBatch()
+                
+              } catch (error) {
+
+                alert('Error in funcitons when click Upload')
+                
+              }
+             }}>Upload</button>
       </div>
-      <FetchData></FetchData>
+      {/* <FetchData></FetchData> */}
       
     </div>
+
+    <div className='Admin-Dsbd-DataVsl'>
+      <FetchData_SPBS></FetchData_SPBS>
+    </div>
+
+    <div>
+      <SPBS_SignInForm></SPBS_SignInForm>
+      
+    </div>
+    </>
   );
 }
 

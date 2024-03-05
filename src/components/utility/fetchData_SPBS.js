@@ -6,6 +6,8 @@
 import React, { Component, useEffect, useState} from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 
+// import {CopyIcon} from './COPY_icon'
+
 import * as XLSX from 'xlsx';
 import { supabase } from '../../supabaseClient';
 
@@ -91,6 +93,21 @@ export const FetchData_SPBS = ()=>{
         }
   
       }
+
+
+      const fetchMainOrderList = async () =>{
+
+        const bucketName = 'admin-data-bucket/Main'; 
+        const rdAmnt_Name = 'AZ Rd Assignment.xlsx';
+        // const rdAmnt_Name = 'AZ Rd Assignment.xlsx';
+
+        try {
+          
+        } catch (error) {
+          
+        }
+
+      }
   
       fetchExcelFile()
   
@@ -106,13 +123,17 @@ export const FetchData_SPBS = ()=>{
       // ))}
   
       // {data}
+
+      <>
       
-      <div>Latest Date: {latestDate}, Latest Batch: {latestBatch}</div>
+      <div>Latest Date: {latestDate}</div>
       
-    
+      <div>Latest Batch: {latestBatch}</div> 
+
+      </>
       // <div>{CloudData.length}</div>
     )
   
   }
 
-  export default FetchData_SPBS
+export default FetchData_SPBS

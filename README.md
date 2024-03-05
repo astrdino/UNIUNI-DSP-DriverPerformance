@@ -19,9 +19,19 @@ Uniuni Driver Performance for DSPs
 2. XLSX data conditional display and analysis
 
 02/18/2024
-Cloud Storage System Update
-static local directory -> Supabase 
+- Cloud Storage System Update: static local directory -> Supabase 
 - Supabase Backend API Configuration ("Update")
 
 03/02/2024
-Integrated Supabase API to fetch data from the cloud storage and displayed in the web component
+- Integrated Supabase API to fetch data from the cloud storage and displayed in the web component
+
+03/04/2024 
+- (Deployed) Added enviroment variables in Vercel so client-end will able to connect with Supabase
+
+- Nested Authentication	
+	1. Application regular access control (Admin/DSPs)
+	2. Supabase senssion control (Log in/out to Supabase when processing data to the database)
+
+	!Policies set up in supabase
+
+!Resolve duplicated name file uploading bug 
