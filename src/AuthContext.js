@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const login = (username, password) => {
-    if (username === 'hello' && password === 'hello') {
+    if (username === '' && password === '') {
       setUser({ username });
       return true;
     }

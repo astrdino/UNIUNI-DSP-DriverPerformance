@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../../supabaseClient'
 
-export const SPBS_SignInForm = () => {
+export const SPBS_SignInForm = ({spbsLoggedIn, setspbsLoggedIn}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const [currentSessionUser, setCurrentSessionUser] = useState('')
+
+    // const [spbsLoggedIn,setspbsLoggedIn] =useState(false)
 
     const getDBsession = async ()=>{
 
@@ -26,6 +28,8 @@ export const SPBS_SignInForm = () => {
                 console.log(session.session.user.email)
 
                 setCurrentSessionUser(session.session.user.email)
+
+                setspbsLoggedIn(true)
 
             }
             
@@ -85,12 +89,46 @@ export const SPBS_SignInForm = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault()
-        const { user, session, error } = await supabase.auth.signIn({
-            email,
-            password,
-        })
-        if (error) console.error('Error logging in:', error.message)
-        else console.log('Logged in:', user, session)
+        // console.log(email,password)
+
+        try {
+
+            const{prc, error} = await supabase.auth.signInWithPassword({
+                email:email,
+                password:password
+            })
+
+
+            //Clear values in the form
+            setEmail('')
+            setPassword('')
+
+            if(error){
+                throw error
+            }
+
+            getDBsession()
+
+            
+
+            
+
+
+            
+        } catch (error) {
+
+            alert(error.message)
+            
+        }
+
+       
+
+        // const { user, session, error } = await supabase.auth.signIn({
+        //     email,
+        //     password,
+        // })
+        // if (error) console.error('Error logging in:', error.message)
+        // else console.log('Logged in:', user, session)
     }
 
 
@@ -104,6 +142,8 @@ export const SPBS_SignInForm = () => {
             })
 
             getDBsession()
+
+            setspbsLoggedIn(true)
 
             
 
@@ -128,6 +168,8 @@ export const SPBS_SignInForm = () => {
 
         setCurrentSessionUser("Inactive")
 
+        setspbsLoggedIn(false)
+
 
        
 
@@ -139,22 +181,39 @@ export const SPBS_SignInForm = () => {
     }
 
 
+    // const handlePwdIptChange = (event)=>{
+    //     event.preventDefault
+    //     console.log(this.)
+
+    // }
+
+
+
+
 
     return (
 
         <>
 
-        <h2>Authentication For Data</h2>
-        {currentSessionUser ? <h3>Session Users: {currentSessionUser}</h3> : <div></div>}
         
-        <form onSubmit={handleLogin}>
+       
+
+        
+        
+
+        {spbsLoggedIn ? <div><h3>Session Users: {currentSessionUser}</h3></div> :
+            
+            <form onSubmit={handleLogin}>
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
             <button type="submit">Log In</button>
-        </form>
-
-        <button onClick={handleAuth_Login}>Authentication with Github</button>
-        <button onClick={handleAuth_SignOut}>Log Out Current Session</button>
+            <button onClick={handleAuth_Login}>Authentication For Dev</button>
+            </form>
+        }
+        
+        
+        { spbsLoggedIn ? <button onClick={handleAuth_SignOut}>Log Out Current Session</button> : <div></div> }
+        
         </>
     )
 }

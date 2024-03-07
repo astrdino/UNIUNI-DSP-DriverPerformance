@@ -34,4 +34,23 @@ Uniuni Driver Performance for DSPs
 
 	!Policies set up in supabase
 
+
+03/05/24
+
+- Admin Dashboard
+	- Login with input values
+	- Clear value if the "Log In" is hitted
+	- Cloud LogIn UI workflow
+
+
+03/06/24
+
+- Admin Dashboard 
+	- Managed and organized code of Admin Dashboard Component
+	- Achieved Props in Component
+
+
+
+...Supabase Table Interaction
+!Resolve the UI logic
 !Resolve duplicated name file uploading bug 

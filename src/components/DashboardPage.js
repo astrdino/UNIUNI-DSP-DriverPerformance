@@ -10,6 +10,8 @@ import DateTime from './utility/dateTime';
 import {FetchData} from './utility/fetchData';
 import {FetchData_SPBS} from './utility/fetchData_SPBS';
 import {SPBS_SignInForm} from './utility/SPBS_SignInForm'
+import {SPBS_Content} from './utility/SPBS_Content'
+
 
 
 
@@ -27,105 +29,134 @@ function DashboardPage() {
   */
 
   const [file, setFile] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [spbsLoggedIn, setspbsLoggedIn] = useState(false);
 
 
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setFile(file);
-  };
+
+
+
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   setFile(file);
+  // };
 
  
   
 
-  const uploadFileToBucket = async () => {
+  // const uploadFileToBucket = async () => {
 
 
-    if (!file) {
-      alert('No file selected');
-      return;
-    }
+  //   if (!file) {
+  //     alert('No file selected');
+  //     return;
+  //   }
 
-    try {
-      // const user = supabase.auth.getUser();
+  //   try {
+  //     // const user = supabase.auth.getUser();
 
-      // if (!user) {
-      //   console.error('User not authenticated');
-      //   alert('User not authenticated. Please log in.');
-      //   return;
-      // }
+  //     // if (!user) {
+  //     //   console.error('User not authenticated');
+  //     //   alert('User not authenticated. Please log in.');
+  //     //   return;
+  //     // }
 
      
-      const filePath = `Main/${file.name}`; 
+  //     const filePath = `Main/${file.name}`; 
 
-      let { data, error } = await supabase.storage
-        .from('admin-data-bucket')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true,
-        });
+  //     let { data, error } = await supabase.storage
+  //       .from('admin-data-bucket')
+  //       .upload(filePath, file, {
+  //         cacheControl: '3600',
+  //         upsert: true,
+  //       });
 
-      if (error) {
+  //     if (error) {
 
-        throw error;
-      }
+  //       throw error;
+  //     }
 
-      console.log('File uploaded:', data);
-      alert('File uploaded successfully!');
-    } 
-    catch (error) {
+  //     console.log('File uploaded:', data);
+  //     alert('File uploaded successfully!');
+  //   } 
+  //   catch (error) {
 
-      console.error('Upsert error:', error.message);
-      alert(`Upsert error: ${error.message}`);
-      throw error
-
-    
-    }
-
+  //     console.error('Upsert error:', error.message);
+  //     alert(`Upsert error: ${error.message}`);
+  //     throw error
 
     
+  //   }
 
-  };
+
+    
+
+  // };
 
 
   // const mappingDateBatch = async () =>{
 
   // }
 
-  const mappingDateBatch = async ()=>{
+  // const mappingDateBatch = async ()=>{
 
-    if(file){
+    
 
-      try {
+  //   if(file){
+
+  //     try {
 
           
-        const{data, error} = await supabase
-        .from('AZ-RD_ASMT')
-        .insert(
-          [
-            {
-              id: 1, Date: '2024-01-01', Batch_Number: 'value3'
-            }
-          ]
-        )   
-
-        if(error){
-          throw error
-        }
+  //       const{data, error} = await supabase
+  //       .from('AZ-RD_ASMT')
+  //       .insert(
+  //         [
+  //           {
+  //             id: 1, Date: '2024-01-01', Batch_Number: 'value3'
+  //           }
+  //         ]
+  //       )  
         
-      } catch (error) {
+       
 
-        alert("Failed to add rows to database")
-        alert(error.message)
-      }
+  //       if(error){
+  //         throw error
+  //       }
+        
+  //     } catch (error) {
+
+  //       alert("Failed to add rows to database")
+  //       alert(error.message)
+  //     }
 
 
-      //
+  //     //
 
-    }
+  //   }else{
+  //     alert('NO File?')
+  //   }
    
+  // }
+
+
+  const handleAuth_SignOut = async () =>{
+
+    await supabase.auth.signOut()
+    setspbsLoggedIn(false)
+
   }
+
+    // setCurrentSessionUser("Inactive")
+
+
+   
+
+
+
+
+
+    
+// }
 
 
   // const check = async() =>{
@@ -174,40 +205,57 @@ function DashboardPage() {
 
   return (
     <>
-    <div style={{marginBottom: '2em'}}>
-      <h1>Dashboard</h1>
-      <DateTime></DateTime>
-      
-      <a href='https://dispatch.uniuni.com/' target="_blank">Official Dispatch Map</a>
-      <div>
-            <h2>General Upload</h2>
-            <input type="file" onChange={handleFileChange} accept=".xls,.xlsx" />
-            {/* <button onClick={uploadFileToBucket}>Upload</button> */}
-            <button onClick={async()=>{
 
-              try {
-                await uploadFileToBucket(); 
-                mappingDateBatch()
-                
-              } catch (error) {
+    <div style={{backgroundColor: '#e9a32d'}}>
 
-                alert('Error in funcitons when click Upload')
-                
-              }
-             }}>Upload</button>
-      </div>
-      {/* <FetchData></FetchData> */}
+        <h1>Dashboard</h1>
+        
+        
+        <DateTime></DateTime>
+
+        <div>
+          <a href='https://dispatch.uniuni.com/' target="_blank">Official Dispatch Map</a>
+        </div>
+        
+        
+
+        <div className='Admin-Dsbd-DataVsl'>  
+          <FetchData_SPBS></FetchData_SPBS>
+        </div>
+
+        <h2>Cloud Database Authentication</h2>
+
+        {
+          spbsLoggedIn ? 
+
+          <>
+          <SPBS_Content></SPBS_Content> 
+
+          <button onClick={handleAuth_SignOut}>Log Out Current Session</button>
+          
+          </>
+          
+          :   
+          
+          <SPBS_SignInForm spbsLoggedIn={spbsLoggedIn} setspbsLoggedIn={setspbsLoggedIn}></SPBS_SignInForm>
+        }
+
+        
+
+        
+
+        
+
+       
       
+ 
     </div>
 
-    <div className='Admin-Dsbd-DataVsl'>
-      <FetchData_SPBS></FetchData_SPBS>
-    </div>
-
-    <div>
-      <SPBS_SignInForm></SPBS_SignInForm>
       
-    </div>
+
+ 
+
+   
     </>
   );
 }
