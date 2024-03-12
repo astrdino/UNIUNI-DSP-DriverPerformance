@@ -27,13 +27,15 @@ export const FetchData_SPBS = ()=>{
   
       const fetchExcelFile = async()=>{
   
-        const bucketName = 'admin-data-bucket/Main'; // Replace with your bucket name
-        const fileName = 'AZ Rd Assignment.xlsx'; // Replace with your file name
+        const bucketName = 'public/admin-data-bucket/Main'; 
+        const fileName = 'AZ Rd Assignment.xlsx'; 
+        // const fileName = 'order_lists.xlsx'; 
+  
   
         
         
         try {
-          let {data, error} = await supabase.storage
+          const {data, error} = await supabase.storage
           .from(bucketName)
           .download(fileName)
   
@@ -46,7 +48,7 @@ export const FetchData_SPBS = ()=>{
 
            
             
-
+            console.log(data)
 
 
             // Read the file as an ArrayBuffer
@@ -95,19 +97,19 @@ export const FetchData_SPBS = ()=>{
       }
 
 
-      const fetchMainOrderList = async () =>{
+      // const fetchMainOrderList = async () =>{
 
-        const bucketName = 'admin-data-bucket/Main'; 
-        const rdAmnt_Name = 'AZ Rd Assignment.xlsx';
-        // const rdAmnt_Name = 'AZ Rd Assignment.xlsx';
+      //   const bucketName = 'admin-data-bucket/Main'; 
+      //   const rdAmnt_Name = 'AZ Rd Assignment.xlsx';
+      //   // const rdAmnt_Name = 'AZ Rd Assignment.xlsx';
 
-        try {
+      //   try {
           
-        } catch (error) {
+      //   } catch (error) {
           
-        }
+      //   }
 
-      }
+      // }
   
       fetchExcelFile()
   

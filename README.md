@@ -50,7 +50,37 @@ Uniuni Driver Performance for DSPs
 	- Achieved Props in Component
 
 
+03/07/24
+- Admin Dashboard
+	- Resolved duplicated name file uploading bug 
+		- Somehow spbs.update() is not working for me. Tried:
+			1. ArrayBuffer decode
+				- "application/vnd.ms-excel", ContentType in the header is not consistent (ContentType in the     request header is correct)
+
+			2. GetURL with the individual token, though ending up with failed to add "sign/" into PUT request
+
+		- Instead, I applied two asyn functions - to remove the candidate first before to
+		  upload them.
+
+
+03/08/24
+- Get polices done for uploading + inserting into supbase storage
+
+03/09/24
+- Workflow in uploading-mapping operation updated
+
+
+03/10/24
+- Uploading-mapping: insertion
+
+03/11/24 (Deployed)
+- Resolved updating latest day and batch number in db once get new RD ASMNT 
+	- current feature: 
+		1. All B-D in 2024 will be mapped in database if db is empty
+		2. If db is not empty, only update the missing B-D
+		3. If first a couple of rows are recorded, the other after them won't get updated.
 
 ...Supabase Table Interaction
 !Resolve the UI logic
-!Resolve duplicated name file uploading bug 
+!Update Latest Date and Batch once get new RD ASMNT
+
