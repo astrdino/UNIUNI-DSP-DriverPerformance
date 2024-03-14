@@ -26,8 +26,15 @@ export const FetchData_SPBS = ()=>{
       
   
       const fetchExcelFile = async()=>{
-  
-        const bucketName = 'public/admin-data-bucket/Main'; 
+        
+        //Production Deployment 
+        //bucketName = 'public/admin-data-bucket/Main'
+        
+        //Local Server
+        //bucketName = 'admin-data-bucket/Main'
+
+        
+        const bucketName = 'admin-data-bucket/Main'; 
         const fileName = 'AZ Rd Assignment.xlsx'; 
         // const fileName = 'order_lists.xlsx'; 
   

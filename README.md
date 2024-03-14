@@ -80,7 +80,19 @@ Uniuni Driver Performance for DSPs
 		2. If db is not empty, only update the missing B-D
 		3. If first a couple of rows are recorded, the other after them won't get updated.
 
+
+03/13/2024
+- Function "Upload Order List to Supabase Storage"
+	- Multiple conditions (Datepicker + File uploading)
+
+
+******Endpoint for the deployment is different than the endpoint for the local test
+
 ...Supabase Table Interaction
+
+!Logic Check if the batch in the sheet is corresponding manually input day
+	- One BatchNum One Column
+	
 !Resolve the UI logic
-!Update Latest Date and Batch once get new RD ASMNT
+!Check file name, 'order_list','rd asmnt'
 
