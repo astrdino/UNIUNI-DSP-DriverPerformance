@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DatePicker from 'react-datepicker'
+import { format, startOfWeek, subDays } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
 import {decode} from 'base64-arraybuffer'
 import * as XLSX from 'xlsx';
@@ -14,14 +15,26 @@ import { supabase } from '../../supabaseClient'
 
 export const SPBS_Content = ()=>{
 
+    // Render Initialization Control
+    // This state is used to control when to allow useEffect logic after two renders
+    const [allowEffect, setAllowEffect] = useState(false);
+    const renderCount = useRef(0);
+
+  
+
     const [file_RA, setFile_RA] = useState(null);
     const [file_OL, setFile_OL] = useState(null)
     const [file_OL_batchNum, setFile_OL_batchNum] = useState(null)
 
     const [selectedDate_OL,setSelectedDate_OL] = useState(null) //For Uploading Order List
+    const [checkPass,setCheckPass] = useState(false) //check pass for input day and recorded day
     
     
     const [selectedDisplayDate, setSelectedDisplayDate] = useState(null)//For displaying Order List
+    const [currentDay, setCurrentDay] = useState('');
+    const [previousWeek, setPreviousWeek] = useState([]);
+
+
 
     const [test, setTest] = useState(1);
     const [spbsLoggedIn, setspbsLoggedIn] = useState('');
@@ -35,6 +48,45 @@ export const SPBS_Content = ()=>{
     //const firstPageRedered = useRef({redered: true})
 
 
+
+    /*Render Initialization Round*/
+
+    //Get Today,and the previous week in terms of useState()
+    useEffect(()=>{
+      const today = new Date();
+      setCurrentDay(format(today, 'MM-dd-yyyy'));
+
+      //const startOfThisWeek = startOfWeek(today);
+        const days = [];
+        for (let i = 1; i <= 7; i++) {
+            const day = subDays(today, i);
+            days.push(format(day, 'MM-dd-yyyy'));
+        }
+
+      setPreviousWeek(days);
+      console.log(days);
+      console.log(format(today, 'MM-dd-yyyy'));
+    },[])
+
+
+
+
+    // Apply this useEffect to update the ref after the first render
+    useEffect(() => {
+      renderCount.current += 1;
+
+      // If the component has rendered more than twice, allow the useEffect logic
+      if (renderCount.current > 1 && !allowEffect) {
+        setAllowEffect(true);
+      }
+      
+      
+    }, []);
+
+
+
+
+    //Road Assignment Mapping when file gets loaded
     useEffect(()=>{
 
 
@@ -102,22 +154,28 @@ export const SPBS_Content = ()=>{
     
                   console.log("Updating Needed")
     
-                  console.log(latestBatch_RA,latestDay_RA)
+                  // console.log(latestBatch_RA,latestDay_RA)
+
+                  //Split Batch Number
+
+                  var BatchArray = latestBatch_RA.split(",")
+                  
+                  // console.log(BatchArray[0],BatchArray[1])
     
                   //DB Insertion
-
-                  if(latestBatch_RA.includes('(!)')){
+                  if(BatchArray[0].includes('(!)')){
                     //Filter non-dispatching date
 
                     //Remove specifier in the batch number
-                    let newBatch = latestBatch_RA.replace('(!)','')
+                    let newBatch = BatchArray[0].replace('(!)','')
 
                     const{data: insertion, error: insertion_error} = await supabase
                     .from('AZ-RD_ASMT')
                     .insert(
                       [
                         {
-                          Date: latestDay_RA, Batch_Number: newBatch, Dispatching_Status: false
+                          Date: latestDay_RA, Batch_Number_1: newBatch,
+                          Batch_Number_2: BatchArray[1], Dispatching_Status: false
       
                         }
                       ]
@@ -139,7 +197,7 @@ export const SPBS_Content = ()=>{
                     .insert(
                       [
                         {
-                          Date: latestDay_RA, Batch_Number: latestBatch_RA
+                          Date: latestDay_RA, Batch_Number_1: BatchArray[0], Batch_Number_2: BatchArray[1]
       
                         }
                       ]
@@ -207,12 +265,137 @@ export const SPBS_Content = ()=>{
       console.log(dateString)
     },[selectedDate_OL])
 
-
+    /* */
     useEffect(()=>{
+
+      
+      const pullOutSingleOrderList = async () =>{
+        try {
+  
+          console.log(`ready to fetch ${selectedDisplayDate}`)
+          
+          //Find sheet from the storage
+
+          //Get storage list from supabase storage
+          const{data, error} = await supabase.storage
+          .from('admin-data-bucket')
+          .list(
+            'Main'
+          )
+
+          if(error){
+            throw error
+          }
+          else{
+
+            //data = [{},{},{}]
+            for (let i = 0; i < data.length; i++) {
+              console.log(data[i].name);
+
+              console.log(selectedDisplayDate);
+
+              if(data[i].name.includes(selectedDisplayDate)){
+                console.log('true');
+                //read this file
+              }
+              // else{
+              //   alert('NO ORDER-LIST fount on for your choosen day')
+              // }
+              
+            }
+          }
+          
+        } catch (error) {
+  
+          alert(error.message)
+          
+        }
+      }
+  
       pullOutSingleOrderList()
     },[selectedDisplayDate])
 
+    /* */
+    //Order List Uploading
+    useEffect(()=>{
+      const Input_date_batch_MatchCheck = async () =>{
+  
+        try {
 
+          //Get Batch Number from candidate sheet
+          //Get day from the database accordingly
+          //Compare the recored day with the input day
+  
+          console.log(file_OL_batchNum);
+
+          //Multiple Columns Check
+          //If THIS batch number is existed in either column1 or column2
+          const columnsToSearch = ['Batch_Number_1', 'Batch_Number_2'];
+          const searchConditions = columnsToSearch
+            .map(column => `${column}.ilike.%${file_OL_batchNum}%`)
+            .join(',');
+          const{data,error} = await supabase
+          .from('AZ-RD_ASMT')
+          .select('*')
+          .or(searchConditions);
+          
+  
+          if(error){
+            throw error
+          } 
+          else if(data){
+            
+
+            if(data.length > 0){
+
+              
+
+              var spbs_day = new Date(data[0].Date.concat('T00:00:00')) //Why Concat? -> Avoid the time variation since the user's environment
+              
+              // console.log(data[0].Date)
+              // console.log(spbs_day)
+              // console.log(selectedDate_OL)
+
+              if(spbs_day.getTime() === selectedDate_OL.getTime()){
+                //Allow to update order list in the db if passing the day check
+                setCheckPass(true)
+              }
+              else{
+                alert("Check the content in your 'Order Lists', ensure that this is a ONE-DAY-Order-Lists ! ")
+              }
+              
+
+            }
+            else{
+              alert("No day found in the table")
+              return
+            }
+
+            
+          }
+          
+        } catch (error) {
+  
+          alert(error.message)
+          
+        }
+  
+      }
+
+      // console.log(renderCount.current)
+      // console.log(allowEffect)
+
+      if(renderCount.current > 1 && allowEffect){
+
+        //Check if two groups of data are match up with each other
+        Input_date_batch_MatchCheck()
+      }
+     
+      
+    },[file_OL_batchNum])
+
+    /* */
+    //For order list uploading internal check
     useEffect(()=>{
       const removeFromBucket = async () => {
         try {
@@ -264,9 +447,14 @@ export const SPBS_Content = ()=>{
                 if (error) {
                   throw error;
                 }
+                else{
+
+                  alert('Removed');
+
+                }
         
               
-                alert('Removed');
+                
 
                 
               }else{
@@ -296,136 +484,96 @@ export const SPBS_Content = ()=>{
     
         };
     
-        const uploadFileToBucket = async () => {
-          try {
-      
-      
-           
-      
-              let filePath = ''
+      const uploadFileToBucket = async () => {
+        try {
     
-              if(file_RA){
     
-                filePath = `Main/${file_RA.name}`; 
+          
     
-                let { data, error } = await supabase.storage
-                .from('admin-data-bucket')
-                .upload(filePath, file_RA, {
-                  cacheControl: '3600'
-                })
-                if (error) {
-                  throw error;
-                }
-    
+            let filePath = ''
+  
+            if(file_RA){
+  
+              filePath = `Main/${file_RA.name}`; 
+  
+              let { data, error } = await supabase.storage
+              .from('admin-data-bucket')
+              .upload(filePath, file_RA, {
+                cacheControl: '3600'
+              })
+              if (error) {
+                throw error;
+              }
+  
+              console.log('File uploaded:', data);
+              alert('File uploaded successfully!');
+  
+  
+            }
+            else if(file_OL){
+  
+              //Manually format month/date digit
+              var month = selectedDate_OL.getMonth() + 1
+              month = month < 10 ? '0' + month : '' + month
+  
+              var date = selectedDate_OL.getDate()
+              date = date < 10 ? '0' + date : '' + date
+  
+              filePath = `Main/${month}-${date}-${selectedDate_OL.getFullYear()}-order-lists.xlsx`; 
+  
+              
+              
+  
+              let { data, error } = await supabase.storage
+              .from('admin-data-bucket')
+              .upload(filePath, file_OL, {
+                cacheControl: '3600'
+              })
+  
+              if (error) {
+                throw error;
+              }else{
+
                 console.log('File uploaded:', data);
                 alert('File uploaded successfully!');
-    
-    
+
+                setCheckPass(false) //Reset the check pass
+
               }
-              else if(file_OL){
-    
-                //Manually format month/date digit
-                var month = selectedDate_OL.getMonth() + 1
-                month = month < 10 ? '0' + month : '' + month
-    
-                var date = selectedDate_OL.getDate()
-                date = date < 10 ? '0' + date : '' + date
-    
-                filePath = `Main/${month}-${date}-${selectedDate_OL.getFullYear()}-order-lists.xlsx`; 
-    
-                
-                
-    
-                let { data, error } = await supabase.storage
-                .from('admin-data-bucket')
-                .upload(filePath, file_OL, {
-                  cacheControl: '3600'
-                })
-    
-                if (error) {
-                  throw error;
-                }
-    
-                console.log('File uploaded:', data);
-                alert('File uploaded successfully!');
-    
-              }
-      
-      
+  
               
-              
-      
-              
-      
-              
-      
-    
-          } 
-          catch (error) {
-      
-              console.error('Error during uploading:', error.message);
-              alert(`Error during uploading: ${error.message}`);
-              throw error
-      
-          
-          }
-      
-        };
-    
-    
-        const pullOutSingleOrderList = async () =>{
-          try {
-    
-            console.log(`ready to fetch ${selectedDisplayDate}`)
-            
-            //Find sheet from the storage
-            
-          } catch (error) {
-    
-            alert(error.message)
-            
-          }
-        }
-    
-    
-    
-        const Input_date_batch_MatchCheck = async () =>{
-    
-          try {
-    
-            console.log(file_OL_batchNum);
-            const{data,error} = await supabase
-            .from('AZ-RD_ASMT')
-            .select()
-            .eq('Batch_Number',file_OL_batchNum)
-            
-    
-            if(error){
-              throw error
+  
             }
     
-            if(data){
-              console.log(data)
-            }
-            
-          } catch (error) {
     
-            alert(error.message)
             
-          }
+            
     
+            
+    
+            
+    
+  
+        } 
+        catch (error) {
+    
+            console.error('Error during uploading:', error.message);
+            alert(`Error during uploading: ${error.message}`);
+            throw error
+    
+        
         }
+    
+      };
+  
 
-      Input_date_batch_MatchCheck()
-         
-         
-          
-      // console.log(sol['C3']);
+      if(checkPass){
 
-      removeFromBucket()
-      uploadFileToBucket()
-      
-    },[file_OL_batchNum])
+        removeFromBucket()
+        uploadFileToBucket()
+      }
+
+    },[checkPass])
 
 
 
@@ -451,8 +599,12 @@ export const SPBS_Content = ()=>{
 
     const HandleSelectedDisplayDateChange = (e) =>{
 
-      const d = e.target.value
+      var d = e.target.value
+
       // console.log(d)
+      //Format to MM-DD-YYYY
+      // const parts = d.split('/')
+      // d = `${parts[0]}-${parts[1]}-${parts[2]}`;
       setSelectedDisplayDate(d)
 
       
@@ -471,7 +623,6 @@ export const SPBS_Content = ()=>{
 
           setUploadBtnCount(uploadBtnCount + 1)
 
-          
 
         }
        
@@ -493,21 +644,15 @@ export const SPBS_Content = ()=>{
         if(file_OL && selectedDate_OL && file_OL.name === 'order_lists.xlsx'){
 
 
-          //Inner Check if batch number in the sheet is match up to the date picker
-          console.log(typeof(file_OL))
-
-          
-
-          var ol = await file_OL.arrayBuffer();
-          const workbook = XLSX.read(ol, { type: 'buffer' });
-         
+          /*Inner Check if batch number in the sheet is match up to the date picker*/
           
           //Get batch number from the sheet
+          var ol = await file_OL.arrayBuffer();
+          const workbook = XLSX.read(ol, { type: 'buffer' });
           const worksheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[worksheetName];
           const checkSpot = 'E3'; 
-          
-          
+    
           setFile_OL_batchNum(worksheet[checkSpot].v)
           // console.log(worksheet[checkSpot].v);
 
@@ -538,7 +683,6 @@ export const SPBS_Content = ()=>{
         
       } catch (error) {
 
-
         alert(error.message)
         
       }
@@ -548,79 +692,75 @@ export const SPBS_Content = ()=>{
 
 
 
-
-
-
-    
     const removeFromBucket = async () => {
-    try {
-        //1. Remove
-        //2. Upload to Supabase Table
-        //3. Map to Table
-        let filePath = ''
-
-        if(file_RA){
-
-          filePath = `Main/${file_RA.name}`; 
-
-
-        }
-        else if(file_OL){
-
-          if(file_OL.name === 'order_lists.xlsx'){
-
-            var month = selectedDate_OL.getMonth() + 1
-            month = month < 10 ? '0' + month : '' + month
-
-            var date = selectedDate_OL.getDate()
-            date = date < 10 ? '0' + date : '' + date
-
-            filePath = `Main/${month}-${date}-${selectedDate_OL.getFullYear()}-order-lists.xlsx`; 
-
-          }else{
-            alert("Not an order list")
-            return
+      try {
+          //1. Remove
+          //2. Upload to Supabase Table
+          //3. Map to Table
+          let filePath = ''
+  
+          if(file_RA){
+  
+            filePath = `Main/${file_RA.name}`; 
+  
+  
           }
-
-          
-
-        }
-      
+          else if(file_OL){
+  
+            if(file_OL.name === 'order_lists.xlsx'){
+  
+              var month = selectedDate_OL.getMonth() + 1
+              month = month < 10 ? '0' + month : '' + month
+  
+              var date = selectedDate_OL.getDate()
+              date = date < 10 ? '0' + date : '' + date
+  
+              filePath = `Main/${month}-${date}-${selectedDate_OL.getFullYear()}-order-lists.xlsx`; 
+  
+            }else{
+              alert("Not an order list")
+              return
+            }
+  
+            
+  
+          }
         
-
-        //Remove from DB
-
-        let { data, error } = await supabase.storage
-        .from('admin-data-bucket')
-        .remove([filePath])
-    
-
-        if (error) {
-          throw error;
-        }
-
-       
-        alert('Removed');
-
-
+          
+  
+          //Remove from DB
+  
+          let { data, error } = await supabase.storage
+          .from('admin-data-bucket')
+          .remove([filePath])
       
-    } 
-    catch (error) {
-
-        console.error('Error when remove items:', error.message);
-        alert(`Error when remove items: ${error.message}`);
-        throw error
-
-    
-    }
-
-    };
-
+  
+          if (error) {
+            throw error;
+          }
+  
+         
+          alert('Removed');
+  
+  
+        
+      } 
+      catch (error) {
+  
+          console.error('Error when remove items:', error.message);
+          alert(`Error when remove items: ${error.message}`);
+          throw error
+  
+      
+      }
+  
+      };
+  
     const uploadFileToBucket = async () => {
       try {
   
   
-       
+        
   
           let filePath = ''
 
@@ -693,47 +833,37 @@ export const SPBS_Content = ()=>{
     };
 
 
-    const pullOutSingleOrderList = async () =>{
-      try {
+    
 
-        console.log(`ready to fetch ${selectedDisplayDate}`)
+
+
+
+
+    // const Input_date_batch_MatchCheck = async () =>{
+
+    //   try {
+
+    //     console.log(file_OL_batchNum);
+    //     const{data,error} = await supabase
+    //     .from('AZ-RD_ASMT')
+    //     .select('Date')
+    //     // .eq('Batch_Number',file_OL_batchNum)
+
+    //     if(error){
+    //       throw error
+    //     }
+
+    //     if(data){
+    //       console.log(data)
+    //     }
         
-        //Find sheet from the storage
+    //   } catch (error) {
+
+    //     alert(error.message)
         
-      } catch (error) {
+    //   }
 
-        alert(error.message)
-        
-      }
-    }
-
-
-
-    const Input_date_batch_MatchCheck = async () =>{
-
-      try {
-
-        console.log(file_OL_batchNum);
-        const{data,error} = await supabase
-        .from('AZ-RD_ASMT')
-        .select('Date')
-        .eq('Batch_Number',file_OL_batchNum)
-
-        if(error){
-          throw error
-        }
-
-        if(data){
-          console.log(data)
-        }
-        
-      } catch (error) {
-
-        alert(error.message)
-        
-      }
-
-    }
+    // }
   
 
 
@@ -776,9 +906,11 @@ export const SPBS_Content = ()=>{
         }}>test</button> */}
 
         <select onChange={HandleSelectedDisplayDateChange}>
-          <option>03/13/2024</option>
-          <option>03/14/2024</option>
-          <option>03/15/2024</option>
+          <option>{currentDay}</option>
+          {previousWeek.map((date,index)=>(
+            <option>{date}</option>
+          ))}
+          
         </select>
         
         </div>

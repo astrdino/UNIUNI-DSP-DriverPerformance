@@ -86,12 +86,17 @@ Uniuni Driver Performance for DSPs
 	- Multiple conditions (Datepicker + File uploading)
 
 
+03/14/2024
+- Added one more column in supabase so two different batch number will be placed in seperated column
+	- One BatchNum One Column
+- Check in the supabase table if the given vaue is stored in any columns
+- Logic Check if the batch in the sheet is corresponding manually 
+
+
+
+
 ******Endpoint for the deployment is different than the endpoint for the local test
 
-...Supabase Table Interaction
-
-!Logic Check if the batch in the sheet is corresponding manually input day
-	- One BatchNum One Column
 	
 !Resolve the UI logic
 !Check file name, 'order_list','rd asmnt'
