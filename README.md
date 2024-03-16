@@ -92,11 +92,15 @@ Uniuni Driver Performance for DSPs
 - Check in the supabase table if the given vaue is stored in any columns
 - Logic Check if the batch in the sheet is corresponding manually 
 
-
+03/15/2024
+- Create new tables by calling PostgreSQL function in React
+	- ...contain policies generating and RLS active
 
 
 ******Endpoint for the deployment is different than the endpoint for the local test
 
+
+...Order List Display Features
 	
 !Resolve the UI logic
 !Check file name, 'order_list','rd asmnt'

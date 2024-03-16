@@ -28,8 +28,7 @@ export const SPBS_Content = ()=>{
 
     const [selectedDate_OL,setSelectedDate_OL] = useState(null) //For Uploading Order List
     const [checkPass,setCheckPass] = useState(false) //check pass for input day and recorded day
-    
-    
+    const [checkPass_OL_table, setCheckPass_OL_table] = useState(null)//For chekcing if uploading order list has corresponding "supbase table" Setup    
     const [selectedDisplayDate, setSelectedDisplayDate] = useState(null)//For displaying Order List
     const [currentDay, setCurrentDay] = useState('');
     const [previousWeek, setPreviousWeek] = useState([]);
@@ -270,46 +269,88 @@ export const SPBS_Content = ()=>{
 
       
       const pullOutSingleOrderList = async () =>{
-        try {
+
+        if(renderCount.current > 1 && allowEffect){
+
+          try {
   
-          console.log(`ready to fetch ${selectedDisplayDate}`)
-          
-          //Find sheet from the storage
-
-          //Get storage list from supabase storage
-          const{data, error} = await supabase.storage
-          .from('admin-data-bucket')
-          .list(
-            'Main'
-          )
-
-          if(error){
-            throw error
-          }
-          else{
-
-            //data = [{},{},{}]
-            for (let i = 0; i < data.length; i++) {
-              console.log(data[i].name);
-
-              console.log(selectedDisplayDate);
-
-              if(data[i].name.includes(selectedDisplayDate)){
-                console.log('true');
-                //read this file
-              }
-              // else{
-              //   alert('NO ORDER-LIST fount on for your choosen day')
-              // }
-              
+            console.log(`ready to fetch ${selectedDisplayDate}`)
+            
+            //Find sheet from the storage
+  
+            //Get storage list from supabase storage
+            const{data, error} = await supabase.storage
+            .from('admin-data-bucket')
+            .list(
+              'Main'
+            )
+  
+            if(error){
+              throw error
             }
-          }
-          
-        } catch (error) {
+            else{
   
-          alert(error.message)
-          
+              var found = false 
+              var fileName = ''
+  
+              //data = [{},{},{}]
+              for (let i = 0; i < data.length; i++) {
+                console.log(data[i].name);
+  
+                console.log(selectedDisplayDate);
+  
+                if(data[i].name.includes(selectedDisplayDate)){
+                  console.log('true');
+                  found  = true
+                  fileName = data[i].name
+                  break
+                  
+                }
+                
+                
+              }
+  
+              if(found){
+                //Download file and create the table accourdingly
+                //console.log('ready to read the file')
+
+
+                const {data,error} = await supabase.storage
+                .from('admin-data-bucket/Main')
+                .download(fileName)
+
+                if(error){
+                  throw error
+                }
+                else if(data){
+
+                  // console.log(data)
+                 
+
+
+                  
+
+                 
+
+                  
+
+                }
+              }
+              else{
+                alert('NO ORDER-LIST found on for your choosen day')
+              }
+            }
+            
+          } catch (error) {
+
+            console.log(error)
+    
+            alert(error.message)
+            
+          }
+
         }
+        
       }
   
       pullOutSingleOrderList()
@@ -326,7 +367,7 @@ export const SPBS_Content = ()=>{
           //Get day from the database accordingly
           //Compare the recored day with the input day
   
-          console.log(file_OL_batchNum);
+          
 
           //Multiple Columns Check
           //If THIS batch number is existed in either column1 or column2
@@ -565,15 +606,104 @@ export const SPBS_Content = ()=>{
         }
     
       };
+
+      const convertToTable = async () =>{
+        try {
+
+          console.log(file_OL)
+          const arrayBuffer = await file_OL.arrayBuffer();
+          const workbook = XLSX.read(arrayBuffer, { type: 'buffer' });
+          const worksheetName = workbook.SheetNames[0];
+          const ol_sheet = workbook.Sheets[worksheetName]
+          
+          var d =selectedDate_OL.getDate() >= 10 ? selectedDate_OL.getDate() : "0" +  selectedDate_OL.getDate()
+          var m =selectedDate_OL.getMonth() + 1 
+          m = m >= 10 ? m : "0" + m
+          var y =selectedDate_OL.getFullYear()
+          var tableName = `${m}-${d}-${y}-order-list`
+          setCheckPass_OL_table(tableName)
+          
+
+
+          //Create a supabase table
+          const { tbData, tbError } = await supabase
+          .rpc('create_dynamic_table', { table_name: tableName }); 
+          
+          
+          
+          if(tbError){
+
+            throw tbError
+
+          }else if(tbData){
+
+            console.log("Table Created");
+            //Successfully create table, read to insert 
+            console.log(tbData);
+          }
+
+
+          
+        } catch (error) {
+
+          console.log(error);
+          alert(error.message)
+          
+        }
+      }
   
 
       if(checkPass){
 
         removeFromBucket()
         uploadFileToBucket()
+        convertToTable()
       }
 
     },[checkPass])
+
+
+    useEffect(()=>{
+
+      if(renderCount.current > 1 && allowEffect){
+        try {
+
+          const checkTb = async () =>{
+
+            console.log(checkPass_OL_table);
+
+            //Check if the table is existed
+            const { ck_tbData, ck_tbError } = await supabase
+            .rpc('check_table_exists', { table_name: checkPass_OL_table }); 
+
+
+            console.log(ck_tbData);
+            if(ck_tbError){
+              console.log("no")
+              throw ck_tbError
+            }else if(ck_tbData){
+
+              console.log("yes")
+              console.log(ck_tbData)
+            }
+            
+          }
+
+
+          checkTb()
+
+
+
+          
+        } catch (error) {
+
+          console.log(error);
+          alert(error.message)
+          
+        }
+      }
+
+    },[checkPass_OL_table])
 
 
 
@@ -908,7 +1038,7 @@ export const SPBS_Content = ()=>{
         <select onChange={HandleSelectedDisplayDateChange}>
           <option>{currentDay}</option>
           {previousWeek.map((date,index)=>(
-            <option>{date}</option>
+            <option key={index}>{date}</option>
           ))}
           
         </select>
