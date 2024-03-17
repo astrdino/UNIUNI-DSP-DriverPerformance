@@ -97,6 +97,11 @@ Uniuni Driver Performance for DSPs
 	- ...contain policies generating and RLS active
 
 
+03/16/2024
+- PostgreSQL function is working on SQL edition in Supabase but not return back to the Application end in react
+  so I apply an alternative which simply utilizing "Select()", if the table not existed, specific type of error is thrown, otherwise is it existed
+
+
 ******Endpoint for the deployment is different than the endpoint for the local test
 
 

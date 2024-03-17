@@ -22,13 +22,15 @@ export const SPBS_Content = ()=>{
 
   
 
-    const [file_RA, setFile_RA] = useState(null);
-    const [file_OL, setFile_OL] = useState(null)
+    const [file_RA, setFile_RA] = useState(null); //File type
+    const [file_OL, setFile_OL] = useState(null)  //File type
     const [file_OL_batchNum, setFile_OL_batchNum] = useState(null)
 
     const [selectedDate_OL,setSelectedDate_OL] = useState(null) //For Uploading Order List
     const [checkPass,setCheckPass] = useState(false) //check pass for input day and recorded day
-    const [checkPass_OL_table, setCheckPass_OL_table] = useState(null)//For chekcing if uploading order list has corresponding "supbase table" Setup    
+    const [check_OL_table, setCheck_OL_table] = useState(null)//String: "mm-dd-yyyy-order-lists", File name for chekcing if uploading order list has corresponding "supbase table" setup    
+    const [checkPass_OL_table, setCheckPass_OL_table] = useState(null)//Bool: check pass for if uploading order list has corresponding "supbase table" setup 
+    
     const [selectedDisplayDate, setSelectedDisplayDate] = useState(null)//For displaying Order List
     const [currentDay, setCurrentDay] = useState('');
     const [previousWeek, setPreviousWeek] = useState([]);
@@ -315,9 +317,7 @@ export const SPBS_Content = ()=>{
                 //console.log('ready to read the file')
 
 
-                const {data,error} = await supabase.storage
-                .from('admin-data-bucket/Main')
-                .download(fileName)
+               
 
                 if(error){
                   throw error
@@ -621,27 +621,11 @@ export const SPBS_Content = ()=>{
           m = m >= 10 ? m : "0" + m
           var y =selectedDate_OL.getFullYear()
           var tableName = `${m}-${d}-${y}-order-list`
-          setCheckPass_OL_table(tableName)
+          setCheck_OL_table(tableName)
           
 
 
-          //Create a supabase table
-          const { tbData, tbError } = await supabase
-          .rpc('create_dynamic_table', { table_name: tableName }); 
-          
-          
-          
-          if(tbError){
-
-            throw tbError
-
-          }else if(tbData){
-
-            console.log("Table Created");
-            //Successfully create table, read to insert 
-            console.log(tbData);
-          }
-
+      
 
           
         } catch (error) {
@@ -670,21 +654,35 @@ export const SPBS_Content = ()=>{
 
           const checkTb = async () =>{
 
-            console.log(checkPass_OL_table);
+            
 
             //Check if the table is existed
-            const { ck_tbData, ck_tbError } = await supabase
-            .rpc('check_table_exists', { table_name: checkPass_OL_table }); 
 
 
-            console.log(ck_tbData);
-            if(ck_tbError){
-              console.log("no")
-              throw ck_tbError
-            }else if(ck_tbData){
+            const {data, error} = await supabase
+              .from(check_OL_table)
+              .select('*')
+              .limit(1)
+              
+            //console.log(data);
+            if(error && error.message.includes(`relation "public.${check_OL_table}" does not exist`)){
+              console.log("table not existed")
+              setCheckPass_OL_table(true)
+            }else{
 
-              console.log("yes")
-              console.log(ck_tbData)
+              //console.log('Table exists or other error', error);
+
+              if(error){
+                alert(error)
+              }else if(data){
+
+                console.log("table is existed")
+
+                setCheckPass_OL_table(false)
+
+              }
+              
+
             }
             
           }
@@ -703,7 +701,93 @@ export const SPBS_Content = ()=>{
         }
       }
 
+    },[check_OL_table])
+
+    
+    useEffect(()=>{
+
+
+      const createTb = async ()=>{
+
+        try {
+
+
+          //Create a supabase table
+          const { tbData, tbError } = await supabase
+          .rpc('create_dynamic_table', { table_name: check_OL_table }); 
+
+          if(tbError){
+            throw tbError
+          }else{
+            //Insertion
+          }
+          
+        } catch (error) {
+
+          alert(error)
+          
+        }
+
+      }
+
+      const insertFromStoT = async ()=> {
+        try {
+
+          const skipColumns = ['tno'];
+
+          var ol = await file_OL.arrayBuffer();
+          const workbook = XLSX.read(ol, { type: 'buffer' });
+          const worksheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[worksheetName];
+          const d = XLSX.utils.sheet_to_json(worksheet)
+
+          // Remove the first row (headers) and filter out columns to skip
+          console.log(d);
+          const headers = d.filter(header => !skipColumns.includes(header))
+          console.log((headers));
+
+          console.log(typeof(d))
+          console.log(Object.values(d)[0])
+
+          const { data: insertData, error } = await supabase
+          .from(check_OL_table)
+          .insert(d)
+
+
+          if(error){
+            throw error
+          }
+          
+          
+        } catch (error) {
+          alert(error)
+        }
+      }
+
+      if(renderCount.current > 1 && allowEffect){
+        if(checkPass_OL_table){
+          console.log("create new table and insert")
+
+          createTb()
+          insertFromStoT()
+
+
+        }
+        else if(!checkPass_OL_table){
+          console.log("table is existed, insert them straight")
+          createTb()
+          insertFromStoT()
+        }
+      }
+
+
+
     },[checkPass_OL_table])
+
+
+
+
+
 
 
 
