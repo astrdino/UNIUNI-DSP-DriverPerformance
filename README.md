@@ -102,6 +102,11 @@ Uniuni Driver Performance for DSPs
   so I apply an alternative which simply utilizing "Select()", if the table not existed, specific type of error is thrown, otherwise is it existed
 
 
+
+03/17/2024
+- Signle Day OrderList Uploading -> Single Day OrderList Table
+
+
 ******Endpoint for the deployment is different than the endpoint for the local test
 
 

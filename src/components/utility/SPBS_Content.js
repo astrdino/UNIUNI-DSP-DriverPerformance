@@ -6,6 +6,7 @@ import {decode} from 'base64-arraybuffer'
 import * as XLSX from 'xlsx';
 
 import { supabase } from '../../supabaseClient'
+import { endOfTomorrow } from 'date-fns';
 
 
 
@@ -743,25 +744,99 @@ export const SPBS_Content = ()=>{
 
           // Remove the first row (headers) and filter out columns to skip
           console.log(d);
-          const headers = d.filter(header => !skipColumns.includes(header))
-          console.log((headers));
+          // const headers = d.filter(header => !skipColumns.includes(header))
 
-          console.log(typeof(d))
-          console.log(Object.values(d)[0])
+
+          //console.log(d[0])
+
+
+          //Get rid of the last two attribute for every rows
+          for (let i = 0; i < Object.values(d).length; i++) {
+
+            //Reference
+            //bag_no
+            //internal_account_number
+            //consignee
+            //address
+            //city
+
+
+
+            var prop1 = '190_pathtime'
+            var prop2 = '199_pathtime'
+            var prop3 = 'reference'
+            var prop4 = 'bag_no'
+            var prop5 = 'internal_account_number'
+            var prop6 = 'consignee'
+            var prop7 = 'address'
+            var prop8 = 'city'
+
+            delete Object.values(d)[i][prop1]
+            delete Object.values(d)[i][prop2]
+            delete Object.values(d)[i][prop3]
+            delete Object.values(d)[i][prop4]
+            delete Object.values(d)[i][prop5]
+            delete Object.values(d)[i][prop6]
+            delete Object.values(d)[i][prop7]
+            delete Object.values(d)[i][prop8]
+            
+            
+             
+            
+          }
+
+          console.log(d);
+
+          // const filter = d.filter((row)=>
+
+          //   row.tno === "UUS0462646620487"
+
+
+          // )
+          // console.log(d[0]);
+
+          // console.log(typeof(d))
+          // console.log(Object.values(d)[0])
 
           const { data: insertData, error } = await supabase
           .from(check_OL_table)
           .insert(d)
 
 
-          if(error){
-            throw error
-          }
+          // if(error){
+          //   throw error
+          // }
           
           
         } catch (error) {
+
+          
           alert(error)
+          alert("Wrong insertions")
         }
+      }
+
+      const dltFromTable = async () =>{
+
+        try {
+
+          const { data, error } = await supabase
+          .from('test')
+          .delete()
+          
+
+          if(error){
+            throw error
+          }
+
+
+          
+        } catch (error) {
+
+          alert(error.message)
+          
+        }
+
       }
 
       if(renderCount.current > 1 && allowEffect){
@@ -775,7 +850,8 @@ export const SPBS_Content = ()=>{
         }
         else if(!checkPass_OL_table){
           console.log("table is existed, insert them straight")
-          createTb()
+          //createTb()
+          dltFromTable()
           insertFromStoT()
         }
       }
