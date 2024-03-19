@@ -104,7 +104,12 @@ Uniuni Driver Performance for DSPs
 
 
 03/17/2024
-- Signle Day OrderList Uploading -> Single Day OrderList Table
+- Signle Day OrderList Uploading -> Single Day OrderList Table (Unfinished: "If table is existed, remove it + upload new")
+
+
+03/18/2024
+- Signle Day OrderList Uploading -> Single Day OrderList Table 
+
 
 
 ******Endpoint for the deployment is different than the endpoint for the local test

@@ -409,7 +409,7 @@ export const SPBS_Content = ()=>{
 
             }
             else{
-              alert("No day found in the table")
+              alert("Please update the Road Assignment. No day found in the table")
               return
             }
 
@@ -779,7 +779,10 @@ export const SPBS_Content = ()=>{
             delete Object.values(d)[i][prop6]
             delete Object.values(d)[i][prop7]
             delete Object.values(d)[i][prop8]
-            
+
+
+            //Attribute for "Delete All"
+            Object.values(d)[i]['d_all'] = true          
             
              
             
@@ -803,6 +806,7 @@ export const SPBS_Content = ()=>{
           .insert(d)
 
 
+
           // if(error){
           //   throw error
           // }
@@ -821,8 +825,9 @@ export const SPBS_Content = ()=>{
         try {
 
           const { data, error } = await supabase
-          .from('test')
+          .from(check_OL_table)
           .delete()
+          .match({'d_all':true})
           
 
           if(error){
