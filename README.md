@@ -111,6 +111,13 @@ Uniuni Driver Performance for DSPs
 - Signle Day OrderList Uploading -> Single Day OrderList Table 
 
 
+03/19/2024
+- Single day dispatch order list display
+
+
+...Seperate "Display" and "Upload" ???
+
+
 
 ******Endpoint for the deployment is different than the endpoint for the local test
 

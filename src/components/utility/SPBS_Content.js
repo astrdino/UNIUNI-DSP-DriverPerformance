@@ -14,7 +14,11 @@ import { endOfTomorrow } from 'date-fns';
 
 
 
+
+
 export const SPBS_Content = ()=>{
+
+    var [DATE,setDATE] = useState(new Date());
 
     // Render Initialization Control
     // This state is used to control when to allow useEffect logic after two renders
@@ -32,22 +36,25 @@ export const SPBS_Content = ()=>{
     const [check_OL_table, setCheck_OL_table] = useState(null)//String: "mm-dd-yyyy-order-lists", File name for chekcing if uploading order list has corresponding "supbase table" setup    
     const [checkPass_OL_table, setCheckPass_OL_table] = useState(null)//Bool: check pass for if uploading order list has corresponding "supbase table" setup 
     
+    const [checkPass_dsbd_s_d, setCheckPass_dsbd_s_d] = useState(false)
+    const [dsbd_single_day, setDsbd_single_day] = useState([])
+
+
     const [selectedDisplayDate, setSelectedDisplayDate] = useState(null)//For displaying Order List
     const [currentDay, setCurrentDay] = useState('');
     const [previousWeek, setPreviousWeek] = useState([]);
 
 
-
-    const [test, setTest] = useState(1);
+    const this_DSP = useRef('')
+    const DSP_List = useRef([]) //in one order list
+   
     const [spbsLoggedIn, setspbsLoggedIn] = useState('');
 
 
-
+    const [test, setTest] = useState(1);
     const [uploadBtnCount, setUploadBtnCount] = useState(1)
 
-    //const [NEWEST_RdAsmnt, setNEWEST_RdAsmnt] = useState('')
-
-    //const firstPageRedered = useRef({redered: true})
+  
 
 
 
@@ -267,7 +274,7 @@ export const SPBS_Content = ()=>{
       console.log(dateString)
     },[selectedDate_OL])
 
-    /* */
+    /* Daily Dispatch Display - Admin Dashboard  */
     useEffect(()=>{
 
       
@@ -314,28 +321,8 @@ export const SPBS_Content = ()=>{
               }
   
               if(found){
-                //Download file and create the table accourdingly
-                //console.log('ready to read the file')
 
-
-               
-
-                if(error){
-                  throw error
-                }
-                else if(data){
-
-                  // console.log(data)
-                 
-
-
-                  
-
-                 
-
-                  
-
-                }
+                setCheckPass_dsbd_s_d(true)
               }
               else{
                 alert('NO ORDER-LIST found on for your choosen day')
@@ -356,6 +343,109 @@ export const SPBS_Content = ()=>{
   
       pullOutSingleOrderList()
     },[selectedDisplayDate])
+
+
+    /* Daily Order List Fetch */
+    useEffect(()=>{
+
+      const fetch = async () =>{
+        try {
+
+          var t_name = selectedDisplayDate + "-order-list"
+
+
+          const{data, error} = await supabase
+          .from(t_name)
+          .select('*')
+          .limit(8000)
+
+          console.log(data)
+
+          setDsbd_single_day(data)
+          
+        } catch (error) {
+
+          alert(error)
+          console.log(error.message)
+          
+        }
+
+      }
+
+      if(renderCount.current > 1 && allowEffect){
+
+        if(checkPass_dsbd_s_d){
+
+          fetch()
+
+          setCheckPass_dsbd_s_d(false) //controller
+          
+          
+        }
+
+      }
+
+    },[checkPass_dsbd_s_d])
+
+
+    useEffect(()=>{
+
+      console.log('hello');
+
+      console.log(renderCount.current)
+      console.log(allowEffect)
+
+      const displayData = ()=>{
+
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const tbody = document.createElement('tbody');
+        table.appendChild(thead);
+        table.appendChild(tbody);
+
+        if (dsbd_single_day.length > 0) {
+
+
+          //console.log(dsbd_single_day.length);
+          const headers = Object.keys(dsbd_single_day[0]).slice(0,-1); //// Excludes the last column header
+
+          //console.log(headers)
+
+          const headerRow = document.createElement('tr');
+          headers.forEach(headerText => {
+              const header = document.createElement('th');
+              header.textContent = headerText;
+              headerRow.appendChild(header);
+          });
+          thead.appendChild(headerRow);
+  
+          // Add data rows
+          dsbd_single_day.forEach(row => {
+              const tr = document.createElement('tr');
+              headers.forEach(headerText => {
+                  const td = document.createElement('td');
+                  td.textContent = row[headerText];
+                  tr.appendChild(td);
+              });
+              tbody.appendChild(tr);
+          });
+      }
+  
+      // Append this table to your document, for example, to a div with id="tableContainer"
+      document.getElementById('tableContainer').appendChild(table);
+
+
+
+
+      }
+
+      if (renderCount.current > 1 && allowEffect) {
+
+       
+        displayData()
+      }
+
+    }, [dsbd_single_day])
 
     /* */
     //Order List Uploading
@@ -750,8 +840,10 @@ export const SPBS_Content = ()=>{
           //console.log(d[0])
 
 
-          //Get rid of the last two attribute for every rows
+          
           for (let i = 0; i < Object.values(d).length; i++) {
+
+
 
             //Reference
             //bag_no
@@ -759,6 +851,10 @@ export const SPBS_Content = ()=>{
             //consignee
             //address
             //city
+
+
+            
+
 
 
 
@@ -770,6 +866,7 @@ export const SPBS_Content = ()=>{
             var prop6 = 'consignee'
             var prop7 = 'address'
             var prop8 = 'city'
+            var prop9 = 'warehouse'
 
             delete Object.values(d)[i][prop1]
             delete Object.values(d)[i][prop2]
@@ -779,11 +876,72 @@ export const SPBS_Content = ()=>{
             delete Object.values(d)[i][prop6]
             delete Object.values(d)[i][prop7]
             delete Object.values(d)[i][prop8]
+            delete Object.values(d)[i][prop9]
 
+            
+
+
+           
+            
+            
+
+            /**
+             * Sorting Drivers
+             */
+
+
+            
+
+
+            var thisDriver = parseInt(Object.values(d)[i]['service_number']) // plus "convertion"
+            // var thisDsp = ''
+            
+            if (26416 <= thisDriver && thisDriver <= 26465){
+
+              this_DSP.current = 'DEL'
+
+            }else if (20553 <= thisDriver && thisDriver <= 20602){
+
+              this_DSP.current = 'Acadia'
+              
+            }else if (16549 <= thisDriver && thisDriver <= 16588){
+              this_DSP.current = 'Desert'
+            }
+            else if (21088 <= thisDriver && thisDriver <= 21137){
+              this_DSP.current = 'Top Car Yarde'
+            }
+            else if (22300 <= thisDriver && thisDriver <= 22349){
+              this_DSP.current = 'Get Ya Roll'
+            }
+            else if (12948 <= thisDriver && thisDriver <= 12997){
+              this_DSP.current = 'L Dan'
+            }
+            else if (15287 <= thisDriver && thisDriver <= 15336){
+              this_DSP.current = 'Haulblaze'
+            }
+            else{
+
+              //Functions Handles
+              this_DSP.current = ''
+
+            }
+
+
+            if(!DSP_List.current.includes(this_DSP.current)){
+              DSP_List.current.push(this_DSP.current)
+            }
+
+            // console.log(DSP_List.current);
+            // console.log(thisDriver);
+            // console.log(this_DSP.current);
+
+            Object.values(d)[i]['dsp_name'] = this_DSP.current 
+
+
+            
 
             //Attribute for "Delete All"
-            Object.values(d)[i]['d_all'] = true          
-            
+            Object.values(d)[i]['d_all'] = true 
              
             
           }
@@ -864,6 +1022,10 @@ export const SPBS_Content = ()=>{
 
 
     },[checkPass_OL_table])
+
+
+
+    
 
 
 
@@ -1172,6 +1334,9 @@ export const SPBS_Content = ()=>{
     return(
 
         <>
+
+
+        <p>  {DATE.toLocaleDateString()}</p>
         <div>
         <h2>General Upload</h2>
         <p>Don't upload two files at the same time</p>
@@ -1207,10 +1372,31 @@ export const SPBS_Content = ()=>{
           ))}
           
         </select>
+
+
+
+
+        <ul>
+        {DSP_List.current.map((item, index) => (
+          <li key={index}>{item}</li> // Displaying the list. Remember, this doesn't auto-update.
+        ))}
+        </ul>
+
+
+        {/* {
+          DSP_List.current > 0 ? 
+          <select>
+            <option>Something</option>
+          </select>
+
+          :
+
+          <div/>
+        } */}
         
         </div>
 
-       {test}
+       <div id="tableContainer"></div>
 
 
 
