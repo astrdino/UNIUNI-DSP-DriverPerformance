@@ -16,7 +16,7 @@ import { endOfTomorrow } from 'date-fns';
 
 
 
-export const SPBS_Content = ()=>{
+export const SPBS_Upload = ()=>{
 
     var [DATE,setDATE] = useState(new Date());
 
@@ -40,7 +40,7 @@ export const SPBS_Content = ()=>{
     const [dsbd_single_day, setDsbd_single_day] = useState([])
 
 
-    const [selectedDisplayDate, setSelectedDisplayDate] = useState(null)//For displaying Order List
+    //const [selectedDisplayDate, setSelectedDisplayDate] = useState(null)//For displaying Order List
     const [currentDay, setCurrentDay] = useState('');
     const [previousWeek, setPreviousWeek] = useState([]);
 
@@ -135,7 +135,20 @@ export const SPBS_Content = ()=>{
 
               const latestWorksheet = workbook.Sheets[workbook.SheetNames[cnt]]
               const latestDay_RA = workbook.SheetNames[cnt]
-              const latestBatch_RA = latestWorksheet['C3'].v
+
+              var latestBatch_RA = latestBatch_RA = latestWorksheet['C3'].v
+
+              // if(typeof(latestWorksheet['C3'].v) !== undefined){
+                
+
+              //   console.log('a')
+                
+
+              // }
+              // else{
+              //   break
+              // }
+              
 
 
               if(latestDay_RA.includes('2024')){
@@ -274,178 +287,7 @@ export const SPBS_Content = ()=>{
       console.log(dateString)
     },[selectedDate_OL])
 
-    /* Daily Dispatch Display - Admin Dashboard  */
-    useEffect(()=>{
 
-      
-      const pullOutSingleOrderList = async () =>{
-
-        if(renderCount.current > 1 && allowEffect){
-
-          try {
-  
-            console.log(`ready to fetch ${selectedDisplayDate}`)
-            
-            //Find sheet from the storage
-  
-            //Get storage list from supabase storage
-            const{data, error} = await supabase.storage
-            .from('admin-data-bucket')
-            .list(
-              'Main'
-            )
-  
-            if(error){
-              throw error
-            }
-            else{
-  
-              var found = false 
-              var fileName = ''
-  
-              //data = [{},{},{}]
-              for (let i = 0; i < data.length; i++) {
-                console.log(data[i].name);
-  
-                console.log(selectedDisplayDate);
-  
-                if(data[i].name.includes(selectedDisplayDate)){
-                  console.log('true');
-                  found  = true
-                  fileName = data[i].name
-                  break
-                  
-                }
-                
-                
-              }
-  
-              if(found){
-
-                setCheckPass_dsbd_s_d(true)
-              }
-              else{
-                alert('NO ORDER-LIST found on for your choosen day')
-              }
-            }
-            
-          } catch (error) {
-
-            console.log(error)
-    
-            alert(error.message)
-            
-          }
-
-        }
-        
-      }
-  
-      pullOutSingleOrderList()
-    },[selectedDisplayDate])
-
-
-    /* Daily Order List Fetch */
-    useEffect(()=>{
-
-      const fetch = async () =>{
-        try {
-
-          var t_name = selectedDisplayDate + "-order-list"
-
-
-          const{data, error} = await supabase
-          .from(t_name)
-          .select('*')
-          .limit(8000)
-
-          console.log(data)
-
-          setDsbd_single_day(data)
-          
-        } catch (error) {
-
-          alert(error)
-          console.log(error.message)
-          
-        }
-
-      }
-
-      if(renderCount.current > 1 && allowEffect){
-
-        if(checkPass_dsbd_s_d){
-
-          fetch()
-
-          setCheckPass_dsbd_s_d(false) //controller
-          
-          
-        }
-
-      }
-
-    },[checkPass_dsbd_s_d])
-
-
-    useEffect(()=>{
-
-      console.log('hello');
-
-      console.log(renderCount.current)
-      console.log(allowEffect)
-
-      const displayData = ()=>{
-
-        const table = document.createElement('table');
-        const thead = document.createElement('thead');
-        const tbody = document.createElement('tbody');
-        table.appendChild(thead);
-        table.appendChild(tbody);
-
-        if (dsbd_single_day.length > 0) {
-
-
-          //console.log(dsbd_single_day.length);
-          const headers = Object.keys(dsbd_single_day[0]).slice(0,-1); //// Excludes the last column header
-
-          //console.log(headers)
-
-          const headerRow = document.createElement('tr');
-          headers.forEach(headerText => {
-              const header = document.createElement('th');
-              header.textContent = headerText;
-              headerRow.appendChild(header);
-          });
-          thead.appendChild(headerRow);
-  
-          // Add data rows
-          dsbd_single_day.forEach(row => {
-              const tr = document.createElement('tr');
-              headers.forEach(headerText => {
-                  const td = document.createElement('td');
-                  td.textContent = row[headerText];
-                  tr.appendChild(td);
-              });
-              tbody.appendChild(tr);
-          });
-      }
-  
-      // Append this table to your document, for example, to a div with id="tableContainer"
-      document.getElementById('tableContainer').appendChild(table);
-
-
-
-
-      }
-
-      if (renderCount.current > 1 && allowEffect) {
-
-       
-        displayData()
-      }
-
-    }, [dsbd_single_day])
 
     /* */
     //Order List Uploading
@@ -902,7 +744,7 @@ export const SPBS_Content = ()=>{
 
             }else if (20553 <= thisDriver && thisDriver <= 20602){
 
-              this_DSP.current = 'Acadia'
+              this_DSP.current = 'Arcadia'
               
             }else if (16549 <= thisDriver && thisDriver <= 16588){
               this_DSP.current = 'Desert'
@@ -922,7 +764,7 @@ export const SPBS_Content = ()=>{
             else{
 
               //Functions Handles
-              this_DSP.current = ''
+              this_DSP.current = 'PHX Warehouse'
 
             }
 
@@ -1054,18 +896,6 @@ export const SPBS_Content = ()=>{
       
     }
 
-    const HandleSelectedDisplayDateChange = (e) =>{
-
-      var d = e.target.value
-
-      // console.log(d)
-      //Format to MM-DD-YYYY
-      // const parts = d.split('/')
-      // d = `${parts[0]}-${parts[1]}-${parts[2]}`;
-      setSelectedDisplayDate(d)
-
-      
-    }
 
     const UPLOAD_RA_BTN_handle = async () =>{
 
@@ -1109,6 +939,7 @@ export const SPBS_Content = ()=>{
           const worksheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[worksheetName];
           const checkSpot = 'E3'; 
+          
     
           setFile_OL_batchNum(worksheet[checkSpot].v)
           // console.log(worksheet[checkSpot].v);
@@ -1139,6 +970,9 @@ export const SPBS_Content = ()=>{
         }
         
       } catch (error) {
+
+
+        console.log(error);
 
         alert(error.message)
         
@@ -1336,9 +1170,9 @@ export const SPBS_Content = ()=>{
         <>
 
 
-        <p>  {DATE.toLocaleDateString()}</p>
+        {/* <p>  {DATE.toLocaleDateString()}</p> */}
         <div>
-        <h2>General Upload</h2>
+        <h2>Cloud DB Authentication</h2>
         <p>Don't upload two files at the same time</p>
         <div>
           <input type="file" onChange={handleRAFileChange} accept=".xls,.xlsx" />
@@ -1365,23 +1199,13 @@ export const SPBS_Content = ()=>{
           setTest(test+1)
         }}>test</button> */}
 
-        <select onChange={HandleSelectedDisplayDateChange}>
-          <option>{currentDay}</option>
-          {previousWeek.map((date,index)=>(
-            <option key={index}>{date}</option>
-          ))}
-          
-        </select>
-
-
-
+      
 
         <ul>
         {DSP_List.current.map((item, index) => (
           <li key={index}>{item}</li> // Displaying the list. Remember, this doesn't auto-update.
         ))}
         </ul>
-
 
         {/* {
           DSP_List.current > 0 ? 
@@ -1396,8 +1220,6 @@ export const SPBS_Content = ()=>{
         
         </div>
 
-       <div id="tableContainer"></div>
-
 
 
         {/* <button onClick={mappingDateBatch}> Map Date/Batch</button> */}
@@ -1407,4 +1229,4 @@ export const SPBS_Content = ()=>{
 
 }
 
-export default SPBS_Content
+export default SPBS_Upload

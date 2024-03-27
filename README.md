@@ -113,9 +113,27 @@ Uniuni Driver Performance for DSPs
 
 03/19/2024
 - Single day dispatch order list display
+- Driver DSP sorting
 
 
-...Seperate "Display" and "Upload" ???
+03/20/2024
+- Seperate "Display" and "Upload" section
+
+
+03/23/2024
+- Single DSP Single Day 
+	- "Date" + "DSP" Selection backend
+
+03/25/2025
+- Home, Login(Main/DSP) frontend
+
+03/26/2025
+
+- Home, Login(Main/DSP) frontend
+- Admin Dsbd frontend D
+
+
+
 
 
 
@@ -126,4 +144,9 @@ Uniuni Driver Performance for DSPs
 	
 !Resolve the UI logic
 !Check file name, 'order_list','rd asmnt'
+!Potential bug: In undispatch day, if today's and tmr's batch num are unfilled
+!Bug in updating new daily order list, asynch error in "insertion"
 
+
+!Login Information Speration
+	e.g. Block the admin attempt in DSP login page

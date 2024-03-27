@@ -1,7 +1,5 @@
 
 
-//Not Applying
-
 
 import React, { Component, useEffect, useState} from 'react';
 import { Link,useNavigate } from 'react-router-dom';
@@ -55,7 +53,7 @@ export const FetchData_SPBS = ()=>{
 
            
             
-            console.log(data)
+            //console.log(data)
 
 
             // Read the file as an ArrayBuffer
@@ -75,7 +73,7 @@ export const FetchData_SPBS = ()=>{
 
             // const latst_date = workbook.SheetNames[1] 
 
-            console.log(workbook.SheetNames)
+            //console.log(workbook.SheetNames)
 
 
 
