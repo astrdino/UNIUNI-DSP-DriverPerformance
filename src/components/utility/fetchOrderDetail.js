@@ -12,7 +12,7 @@ import { supabase } from '../../supabaseClient'
 import PieChart from '../frontend/pieChart'
 
 
-export const FetchOrderDetail = () =>{
+export const FetchOrderDetail = ({selDayFromParent}) =>{
 
     //var [DATE,setDATE] = useState(new Date());
 
@@ -528,6 +528,7 @@ export const FetchOrderDetail = () =>{
 
         <>
         <h2>Order Detail</h2>
+        {selDayFromParent}
 
         <select onChange={HandleSelectedDisplayDateChange}>
           <option>{currentDay}</option>

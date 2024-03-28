@@ -227,6 +227,10 @@ function DashboardPage() {
   // };
 
 
+  const [childData, setChildData] = useState('');
+  const getDataFromChild = (value) =>{
+    setChildData(value)
+  }
 
 
 
@@ -302,8 +306,13 @@ function DashboardPage() {
         <div className='DSBD-Main-Left' style={{ height: `${windowHeight}px` }}>
         <div>
 
-          <WeekWheel></WeekWheel>
-         
+          <WeekWheel selDay = {getDataFromChild}></WeekWheel>
+          {childData}
+          <div className='Admin-Dsbd-DataVsl-Detail'> 
+
+            <FetchOrderDetail selDayFromParent={childData}></FetchOrderDetail> 
+
+          </div>
         </div>
         </div>
         <div className='DSBD-Main-Right' style={{ height: `${windowHeight}px` }}> <WeekWheel></WeekWheel></div>
