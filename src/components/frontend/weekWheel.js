@@ -13,6 +13,8 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 
 const WeekWheel = ({ selDay }) => {
+  const [today, setToday] = useState(format(Date(), "MM-dd-yyyy"));
+
   //Custom Frontend Component
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -28,8 +30,10 @@ const WeekWheel = ({ selDay }) => {
 
   //Get Today,and the previous week in terms of useState()
   useEffect(() => {
-    const today = new Date();
+    // const today = new Date();
+
     setCurrentDay(format(today, "MM-dd-yyyy"));
+    setSelectedDisplayDate(format(today, "MM-dd-yyyy"));
 
     //const startOfThisWeek = startOfWeek(today);
     const days = [format(today, "MM-dd-yyyy")];
@@ -60,12 +64,17 @@ const WeekWheel = ({ selDay }) => {
 
   //
   const handleDaySel = (e) => {
-    setSelectedDisplayDate(e.target.value);
-    // Send data back to the parent
-    selDay(selectedDisplayDate);
+    //console.log("open");
 
-    console.log(e.target.value);
+    //console.log(`from ${selectedDisplayDate}`);
+
+    selDay(e.target.value); // Send data back to the parent
+    setSelectedDisplayDate(e.target.value);
+
+    // console.log(e.target.value);
   };
+
+  const nextWeekPrd = () => {};
 
   return (
     <>
@@ -91,10 +100,10 @@ const WeekWheel = ({ selDay }) => {
             {date}
           </button>
         ))}
-        <ArrowRightIcon />
+        <ArrowRightIcon onClick={nextWeekPrd} />
       </Stack>
-      Current Day: {selectedDisplayDate}
-      <button onClick={sendSelDay}>Send Data to Parent</button>
+      Current Selected Day: {selectedDisplayDate}
+      {/* <button onClick={sendSelDay}>Send Data to Parent</button> */}
     </>
   );
 };

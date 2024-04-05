@@ -148,6 +148,14 @@ Uniuni Driver Performance for DSPs
 03/27/2024
 ![alt text](image.png)
 
+04/03/2024
+
+- Expand columns for new "rd assignment AZ" in the supabase table
+
+04/04/2024
+
+- Scripts organizaiton (admin dashboard date selection)
+
 **\*\***Endpoint for the deployment is different than the endpoint for the local test
 
 ...Order List Display Features
@@ -158,3 +166,7 @@ Uniuni Driver Performance for DSPs
 
 !Login Information Speration
 e.g. Block the admin attempt in DSP login page
+
+!Mapping data to the supabase table in "upload new order list"
+
+- If the existed data is different than new comming, update them
