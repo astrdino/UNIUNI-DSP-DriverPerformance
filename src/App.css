@@ -1,3 +1,8 @@
+li{
+    text-decoration: none;
+}
+
+
 .APP-OUTER {
     display: table;
     position: absolute;
@@ -97,7 +102,7 @@
     grid-row:    1 / 5;
     grid-column: 2 / 5;
 
-    overflow: auto; /* Make content scrollable */
+   /* overflow: auto;  Make content scrollable */
 
 
     display: grid;
@@ -106,6 +111,9 @@
     padding-left: 3em;
     padding-right: 3em;
     padding-top: 2em;
+
+   
+    overflow: hidden;
   
   
 
@@ -114,11 +122,19 @@
 .DSBD-Main-Left{
     background-color: blanchedalmond;
     border: 2px rebeccapurple solid;
+    overflow: scroll;
+    grid-column: 1 / 2; /*  Div shrinking without redefining the layout */
+    
+
+
+
     
 }
 
 .DSBD-Main-Right{
     background-color: blanchedalmond;
+    overflow: scroll;
+    grid-column: 2 / 3; /*  Div shrinking without redefining the layout */
 }
 
 

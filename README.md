@@ -156,10 +156,23 @@ Uniuni Driver Performance for DSPs
 
 - Scripts organizaiton (admin dashboard date selection)
 
+04/05/2024
+
+- Fetch data for pie view in the admin dashboard
+
+04/06/2024
+
+- Mapping to the individual DSP pie chart when clicking on the according button
+  ![alt text](image-1.png)
+
+- Finished one-day mapping only
+
 **\*\***Endpoint for the deployment is different than the endpoint for the local test
 
+/^&%&^%_&^&\*\*(&(_^&_%_&$$$*&*$$_$&&_^\*))/
 ...Order List Display Features
-!Resolve the UI logic
+!"Updated time" in "az rd asmnt" table
+...Resolve the UI logic
 !Check file name, 'order_list','rd asmnt'
 !Potential bug: In undispatch day, if today's and tmr's batch num are unfilled
 !Bug in updating new daily order list, asynch error in "insertion"
@@ -170,3 +183,8 @@ e.g. Block the admin attempt in DSP login page
 !Mapping data to the supabase table in "upload new order list"
 
 - If the existed data is different than new comming, update them
+
+!!!Browser Testing
+
+- Chrome working
+- Edge not

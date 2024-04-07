@@ -79,7 +79,7 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
     const pullOutSingleOrderList = async () => {
       if (renderCount.current > 1 && allowEffect) {
         try {
-          console.log(`ready to fetch ${selectedDisplayDate}`);
+          console.log(`ready to fetch order list ${selectedDisplayDate}`);
 
           //Find sheet from the storage
 
@@ -318,7 +318,7 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
 
     if (renderCount.current > 1 && allowEffect) {
       genDSPlist(); //Generate DSP list for Front end selection
-      displayData(); //Display Overall data when select dates
+      //displayData(); //Display Overall data when select dates
 
       console.log(DSP_List);
 
@@ -335,12 +335,53 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
        * 2.
        */
 
+      var fetchForDay = "";
+
+      if (selDayFromParent) {
+        fetchForDay = format(selDayFromParent, "yyyy-MM-dd"); //Convert date format to match the build-on date format in the supabase table
+      } else {
+        //Default day setting in the "first" render
+        fetchForDay = format(Date(), "yyyy-MM-dd");
+      }
+
       const readSpbsTable = async () => {
         const { data, error } = await supabase
           .from("AZ-RD_ASMT_new")
-          .select("*");
+          .select(
+            "Dispatch_Route1, Dispatch_Route2, Dispatch_Route3, Dispatch_Route4, Dispatch_Route5, Dispatch_Route6, Dispatch_Route7"
+          )
+          .eq("Date", fetchForDay);
+
         if (data) {
           console.log(data);
+          if (data[0] !== undefined) {
+            console.log(Object.keys(data[0]).length);
+            //No "sel date" input in the first round render
+            // console.log(data[0]["Dispatch_Route1"]["final_finish_amt"]);
+            // console.log(data[0]["Dispatch_Route1"]["retruns_amt"]);
+            var l = []; //Ready for pie chart data injection
+            for (
+              let index = 1;
+              index < Object.keys(data[0]).length + 1;
+              index++
+            ) {
+              var thisRt = {
+                203: data[0][`Dispatch_Route${index}`]["final_finish_amt"],
+                231: data[0][`Dispatch_Route${index}`]["returns_amt"],
+              };
+              l.push(thisRt);
+            }
+
+            setDSPStats_Single_Day_Vslze_List(l);
+            setDSPStats_Single_Day_Vslze({
+              203: data[0]["Dispatch_Route1"]["final_finish_amt"],
+              231: data[0]["Dispatch_Route1"]["returns_amt"],
+            });
+          }
+
+          if (data.length === 0) {
+            alert("no data found");
+          }
         }
       };
 
@@ -378,6 +419,14 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
   const [DSPSel, setDSPSel] = useState("");
   const [DSPStats_Single_Day, setDSPStats_Single_Day] = useState({});
   const [DSPStats_Single_Day_pieV, setDSPStats_Single_Day_pieV] = useState({}); //v1
+
+  //v2 Date Selection Button
+  const [DSPStats_Single_Day_Vslze, setDSPStats_Single_Day_Vslze] = useState(
+    {}
+  );
+
+  const [DSPStats_Single_Day_Vslze_List, setDSPStats_Single_Day_Vslze_List] =
+    useState([]); //List of objects
 
   //DSP List Selection Handle v1
   const handleDSPselected = (e) => {
@@ -457,6 +506,32 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
     }
   }, [selDayFromParent]);
 
+  /********
+   *
+   *
+   * Front-end component
+   *
+   *
+   */
+
+  const pies = () => {
+    console.log(DSPStats_Single_Day_Vslze_List);
+    if (DSPStats_Single_Day_Vslze_List.length > 0) {
+      for (
+        let index = 0;
+        index < DSPStats_Single_Day_Vslze_List.length;
+        index++
+      ) {}
+
+      return DSPStats_Single_Day_Vslze_List.map((oneDayVData, index) => (
+        <li>
+          <h3>Route {index + 1}</h3>
+          <PieChart data={oneDayVData}></PieChart>
+        </li>
+      ));
+    }
+  };
+
   return (
     <>
       {/* <h2>Order Detail</h2> */}
@@ -488,8 +563,9 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
           </option>
         ))}
       </select>
+      <ul>{pies()}</ul>
 
-      <PieChart data={DSPStats_Single_Day_pieV}></PieChart>
+      {/* <PieChart data={DSPStats_Single_Day_Vslze}></PieChart> */}
 
       <div id="tableContainer"></div>
     </>
