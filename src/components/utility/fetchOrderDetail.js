@@ -74,6 +74,7 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
     }
   }, []);
 
+  /** V1 Starts */
   /* Daily Order List Selection */
   useEffect(() => {
     const pullOutSingleOrderList = async () => {
@@ -125,7 +126,7 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
       }
     };
 
-    pullOutSingleOrderList();
+    //pullOutSingleOrderList();
   }, [selectedDisplayDate]);
 
   /* Daily Order List Fetch */
@@ -326,108 +327,6 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
     }
   }, [dsbd_single_day]);
 
-  /* V2 When click date button */
-  useEffect(() => {
-    if (renderCount.current >= 2) {
-      //Only function in the 2nd render to avoid the meaningless computation
-      /**
-       * 1. Read Supabase Data
-       * 2.
-       */
-
-      var fetchForDay = "";
-
-      if (selDayFromParent) {
-        fetchForDay = format(selDayFromParent, "yyyy-MM-dd"); //Convert date format to match the build-on date format in the supabase table
-      } else {
-        //Default day setting in the "first" render
-        fetchForDay = format(Date(), "yyyy-MM-dd");
-      }
-
-      const readSpbsTable = async () => {
-        const { data, error } = await supabase
-          .from("AZ-RD_ASMT_new")
-          .select(
-            "Dispatch_Route1, Dispatch_Route2, Dispatch_Route3, Dispatch_Route4, Dispatch_Route5, Dispatch_Route6, Dispatch_Route7"
-          )
-          .eq("Date", fetchForDay);
-
-        if (data) {
-          console.log(data);
-          if (data[0] !== undefined) {
-            console.log(Object.keys(data[0]).length);
-            //No "sel date" input in the first round render
-            // console.log(data[0]["Dispatch_Route1"]["final_finish_amt"]);
-            // console.log(data[0]["Dispatch_Route1"]["retruns_amt"]);
-            var l = []; //Ready for pie chart data injection
-            for (
-              let index = 1;
-              index < Object.keys(data[0]).length + 1;
-              index++
-            ) {
-              var thisRt = {
-                203: data[0][`Dispatch_Route${index}`]["final_finish_amt"],
-                231: data[0][`Dispatch_Route${index}`]["returns_amt"],
-              };
-              l.push(thisRt);
-            }
-
-            setDSPStats_Single_Day_Vslze_List(l);
-            setDSPStats_Single_Day_Vslze({
-              203: data[0]["Dispatch_Route1"]["final_finish_amt"],
-              231: data[0]["Dispatch_Route1"]["returns_amt"],
-            });
-          }
-
-          if (data.length === 0) {
-            alert("no data found");
-          }
-        }
-      };
-
-      /**1. Read Supabase Data */
-
-      try {
-        readSpbsTable();
-      } catch (error) {}
-    }
-  }, [selDayFromParent]);
-
-  //For Native Sel
-  const HandleSelectedDisplayDateChange = (e) => {
-    //setDsbd_single_day([])
-
-    var d = e.target.value;
-
-    // console.log(d);
-    //Format to MM-DD-YYYY
-    // const parts = d.split('/')
-    // d = `${parts[0]}-${parts[1]}-${parts[2]}`;
-    setSelectedDisplayDate(d);
-  };
-
-  //Sel from Parent block
-  // const handleSelDsplyDateChge = (e) => {
-  //   setSelectedDisplayDate(e);
-  //   console.log("runrun");
-  // };
-
-  // useEffect(() => {
-  //   console.log("runrun");
-  // }, [selDayFromParent]);
-
-  const [DSPSel, setDSPSel] = useState("");
-  const [DSPStats_Single_Day, setDSPStats_Single_Day] = useState({});
-  const [DSPStats_Single_Day_pieV, setDSPStats_Single_Day_pieV] = useState({}); //v1
-
-  //v2 Date Selection Button
-  const [DSPStats_Single_Day_Vslze, setDSPStats_Single_Day_Vslze] = useState(
-    {}
-  );
-
-  const [DSPStats_Single_Day_Vslze_List, setDSPStats_Single_Day_Vslze_List] =
-    useState([]); //List of objects
-
   //DSP List Selection Handle v1
   const handleDSPselected = (e) => {
     console.log("WAWLALWA");
@@ -469,34 +368,129 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
     setDSPStats_Single_Day(dsp_stats);
     console.log(dsp_stats);
     console.log(fltrDsp_stats);
-
-    // switch(val){
-    //   case 'Top Car Yarde':
-    //     console.log(S_Day_S_DSP_Obj[val]);
-    //     //console.log(S_Day_S_Driver_Obj[val])
-    //     break
-    //   case 'Haulblaze':
-    //     console.log(S_Day_S_DSP_Obj[val]);
-    //     break
-    //   case 'Arcadia':
-    //     console.log(S_Day_S_DSP_Obj[val]);
-    //     break
-    //   case 'DEL':
-    //     console.log(S_Day_S_DSP_Obj[val]);
-    //     break
-    //   case 'Desert':
-    //     console.log(S_Day_S_DSP_Obj[val]);
-    //     break
-    //   case 'L Dan':
-    //     console.log(S_Day_S_DSP_Obj[val]);
-    //     break
-    //   case 'Get Ya Roll':
-    //     console.log(S_Day_S_DSP_Obj[val]);
-    //     break
-    // }
-
-    //console.log(val);
   };
+
+  //For Native Sel
+  const HandleSelectedDisplayDateChange = (e) => {
+    //setDsbd_single_day([])
+
+    var d = e.target.value;
+
+    // console.log(d);
+    //Format to MM-DD-YYYY
+    // const parts = d.split('/')
+    // d = `${parts[0]}-${parts[1]}-${parts[2]}`;
+    setSelectedDisplayDate(d);
+  };
+
+  /** V1 Ends */
+
+  /* V2 Fetch and Display Dispatch status (rd assignment) instead of the order list */
+  //When click date button
+  useEffect(() => {
+    if (renderCount.current >= 2) {
+      //Only function in the 2nd render to avoid the extra computation
+
+      /**
+       * 1. Read Supabase Data
+       * 2.
+       */
+
+      //Date format conversion
+      var fetchForDay = "";
+      if (selDayFromParent) {
+        fetchForDay = format(selDayFromParent, "yyyy-MM-dd"); //Convert date format to match the build-on date format in the supabase table
+      } else {
+        //Default day setting in the "first" render
+        fetchForDay = format(Date(), "yyyy-MM-dd");
+      }
+
+      const readSpbsTable = async () => {
+        const { data, error } = await supabase
+          .from("AZ-RD_ASMT_new")
+          .select(
+            "Dispatch_Route1, Dispatch_Route2, Dispatch_Route3, Dispatch_Route4, Dispatch_Route5, Dispatch_Route6, Dispatch_Route7"
+          )
+          .eq("Date", fetchForDay);
+
+        if (data) {
+          console.log(data);
+          if (data[0] !== undefined) {
+            //console.log(Object.keys(data[0]).length);
+            //No "sel date" input in the first round render
+            // console.log(data[0]["Dispatch_Route1"]["final_finish_amt"]);
+            // console.log(data[0]["Dispatch_Route1"]["retruns_amt"]);
+
+            //Making up the data for the pie chart
+            var l = [];
+
+            for (
+              let index = 1;
+              index < Object.keys(data[0]).length + 1;
+              index++
+            ) {
+              if (
+                data[0][`Dispatch_Route${index}`] !== null &&
+                data[0][`Dispatch_Route${index}`]["finish_rate"] !== null
+              ) {
+                var thisRt = {
+                  203: data[0][`Dispatch_Route${index}`]["final_finish_amt"],
+                  231: data[0][`Dispatch_Route${index}`]["returns_amt"],
+                };
+              } else if (data[0][`Dispatch_Route${index}`] === null) {
+                //No dispatch day
+                var thisRt = "No Dispatch";
+              } else {
+                //No update
+                var thisRt = null;
+              }
+
+              l.push(thisRt);
+            }
+
+            setDSPStats_Single_Day_Vslze_List(l);
+            // setDSPStats_Single_Day_Vslze({
+            //   203: data[0]["Dispatch_Route1"]["final_finish_amt"],
+            //   231: data[0]["Dispatch_Route1"]["returns_amt"],
+            // });
+          }
+
+          if (data.length === 0) {
+            alert("no data found");
+            return;
+          }
+        }
+      };
+
+      /**1. Read Supabase Data */
+
+      try {
+        readSpbsTable();
+      } catch (error) {}
+    }
+  }, [selDayFromParent]);
+
+  //Sel from Parent block
+  // const handleSelDsplyDateChge = (e) => {
+  //   setSelectedDisplayDate(e);
+  //   console.log("runrun");
+  // };
+
+  // useEffect(() => {
+  //   console.log("runrun");
+  // }, [selDayFromParent]);
+
+  const [DSPSel, setDSPSel] = useState("");
+  const [DSPStats_Single_Day, setDSPStats_Single_Day] = useState({});
+  const [DSPStats_Single_Day_pieV, setDSPStats_Single_Day_pieV] = useState({}); //v1
+
+  //v2 Date Selection Button
+  const [DSPStats_Single_Day_Vslze, setDSPStats_Single_Day_Vslze] = useState(
+    {}
+  );
+
+  const [DSPStats_Single_Day_Vslze_List, setDSPStats_Single_Day_Vslze_List] =
+    useState([]); //List of objects
 
   //For the weekWheel
   useEffect(() => {
@@ -515,20 +509,23 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
    */
 
   const pies = () => {
-    console.log(DSPStats_Single_Day_Vslze_List);
+    //console.log(DSPStats_Single_Day_Vslze_List);
     if (DSPStats_Single_Day_Vslze_List.length > 0) {
-      for (
-        let index = 0;
-        index < DSPStats_Single_Day_Vslze_List.length;
-        index++
-      ) {}
+      //If the data is successfully fetched
+      console.log(DSPStats_Single_Day_Vslze_List);
 
-      return DSPStats_Single_Day_Vslze_List.map((oneDayVData, index) => (
-        <li>
-          <h3>Route {index + 1}</h3>
-          <PieChart data={oneDayVData}></PieChart>
-        </li>
-      ));
+      if (DSPStats_Single_Day_Vslze_List[0] === "No Dispatch") {
+        return <p>No Dispatch</p>;
+      } else if (DSPStats_Single_Day_Vslze_List[0] === null) {
+        return <p>Please update data</p>;
+      } else {
+        return DSPStats_Single_Day_Vslze_List.map((oneDayVData, index) => (
+          <li>
+            <h3>Route {index + 1}</h3>
+            <PieChart data={oneDayVData}></PieChart>
+          </li>
+        ));
+      }
     }
   };
 
@@ -567,7 +564,7 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
 
       {/* <PieChart data={DSPStats_Single_Day_Vslze}></PieChart> */}
 
-      <div id="tableContainer"></div>
+      {/* <div id="tableContainer"></div> */}
     </>
   );
 };

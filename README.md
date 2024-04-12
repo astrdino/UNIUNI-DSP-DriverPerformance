@@ -167,11 +167,30 @@ Uniuni Driver Performance for DSPs
 
 - Finished one-day mapping only
 
+04/08/2024
+
+- ...Handle conditions when clicking date button
+  - If latest rdAmnt is not include the shown date button
+  - If the rdAmnt is not record THIS day
+  - Handle the no dispatch day
+
+04/09/2024
+
+- Admin dashboard date selection
+  - Seperate conditions (Normal/No dispatch date/No update)
+  - Getting start to work on the resizable side bar
+
+04/11/2024
+
+- Admin dashboard sidebar layout and menu button
+
 **\*\***Endpoint for the deployment is different than the endpoint for the local test
 
 /^&%&^%_&^&\*\*(&(_^&_%_&$$$*&*$$_$&&_^\*))/
+!![alt text](image-2.png)
 ...Order List Display Features
 !"Updated time" in "az rd asmnt" table
+!update existed date in the supabase when upload new rd assignment
 ...Resolve the UI logic
 !Check file name, 'order_list','rd asmnt'
 !Potential bug: In undispatch day, if today's and tmr's batch num are unfilled

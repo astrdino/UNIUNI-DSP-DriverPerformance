@@ -20,7 +20,7 @@ const PieChart = ({ data }) => {
 
     const arcGenerator = d3.arc().innerRadius(0).outerRadius(100);
 
-    console.log(ref.current);
+    //console.log(ref.current);
 
     const svg = d3.select(ref.current);
     svg.selectAll("*").remove();
