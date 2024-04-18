@@ -421,8 +421,8 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
             // console.log(data[0]["Dispatch_Route1"]["final_finish_amt"]);
             // console.log(data[0]["Dispatch_Route1"]["retruns_amt"]);
 
-            //Making up the data for the pie chart
-            var l = [];
+            var l = []; //Making up the data for the pie chart
+            var digest = []; //
 
             for (
               let index = 1;
@@ -490,13 +490,16 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
   );
 
   const [DSPStats_Single_Day_Vslze_List, setDSPStats_Single_Day_Vslze_List] =
-    useState([]); //List of objects
+    useState([]); //List of objects for Visualization
+
+  const [DSPStats_Single_Day_List, setDSPStats_Single_Day_List] = useState({}); //List of objects for Digest, inculding driver list and assignment
 
   //For the weekWheel
   useEffect(() => {
     // setSelectedDisplayDate(selDayFromParent);
     if (selDayFromParent) {
       setSelectedDisplayDate(selDayFromParent);
+      console.log("FO", selDayFromParent);
     }
   }, [selDayFromParent]);
 
@@ -522,6 +525,9 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
         return DSPStats_Single_Day_Vslze_List.map((oneDayVData, index) => (
           <li>
             <h3>Route {index + 1}</h3>
+            <div class={"DSBD-Main-SingleDSP-Digest"}>
+              Team Digest Goes Over Here
+            </div>
             <PieChart data={oneDayVData}></PieChart>
           </li>
         ));
@@ -532,7 +538,7 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
   return (
     <>
       {/* <h2>Order Detail</h2> */}
-      {`getFrom Child2 ${selDayFromParent}`}
+      {/* {`getFrom Child2 ${selDayFromParent}`} */}
 
       {/* <select onChange={HandleSelectedDisplayDateChange}>
         <option>{currentDay}</option>
@@ -553,13 +559,13 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
         ))}
         </ul> */}
 
-      <select onChange={handleDSPselected}>
+      {/* <select onChange={handleDSPselected}>
         {DSP_List.current.map((item, index) => (
           <option key={index} value={item}>
             {item}
           </option>
         ))}
-      </select>
+      </select> */}
       <ul>{pies()}</ul>
 
       {/* <PieChart data={DSPStats_Single_Day_Vslze}></PieChart> */}

@@ -65,7 +65,7 @@ li{
     
 
     
-    /* height: 500px; */
+   
 
 
 }
@@ -74,16 +74,63 @@ li{
 
     position: fixed;
     left: 0;
-    top: 0;
+    top: 50%;
     z-index: 1000; /* Higher index to stay on top */
+    transform: rotate(90deg);
 
 }
 
-/* .DSBD-Sidebar{
+.DSBD-SScreenIcon{
 
-    background-color: blue;
+    position: fixed;
+    left: 97.5%;
+    top: 50%;
+    z-index: 1000; /* Higher index to stay on top */
+    transform: rotate(90deg);
 
-} */
+}
+
+
+.DSBD-Sidebar{
+    background-color: rgb(206, 200, 191);
+    /* height: 200%; */
+}
+
+
+.DSBD-Sidebar-Context{
+
+    display: none;
+  
+    
+  
+   
+
+}
+
+.DSBD-Sidebar-Context ul{
+
+    list-style-type: none;
+  
+   
+    
+   
+
+}
+
+.DSBD-Sidebar-Context ul li{
+
+    margin-bottom: 2em;
+    
+
+}
+
+.DSBD-Sidebar-Context *{
+
+    text-decoration: none;
+    color: black;
+   
+
+}
 
 .DSBD-Sidebar-Control{
     background-color: blue;
@@ -136,9 +183,12 @@ li{
     padding-left: 3em;
     padding-right: 3em;
     padding-top: 2em;
+    padding-bottom: 2em;
+  
 
    
     overflow: hidden;
+    transition:2s;
     
     
   
@@ -168,7 +218,7 @@ li{
    
     overflow: hidden;
 
-    transition: width 0.3s ease-in;
+    /* transition:2s; */
     
     
   
@@ -176,14 +226,92 @@ li{
 
 }
 
+.DSBD-Main-TopBar{
+
+    /* position: absolute; */
+    
+    
+    
+}
+
+.Daily-TopBar{
+    /* background-color: rgb(90, 90, 86); */
+    display: grid; 
+    grid-template-columns: repeat(1fr,8);
+    grid-template-rows: repeat(1fr,8);
+
+    
+}
+
+.Daily-TopBar-WeekSel{
+
+    grid-column: 1/3;
+    grid-row: 1/9;
+    /* background-color: darksalmon; */
+
+
+ 
+    
+
+}
+
+.DSBD-Main-Context{
+    /* margin-top: 14em; */
+}
+
+.WeekSel{
+
+    display: grid;
+    /* grid-auto-flow: row; */
+    grid-template-columns: repeat(2,1fr);
+    grid-template-rows: repeat(3,1fr);
+    gap:1em;
+ 
+    padding: 1em 1em 1em 1em;
+    
+
+}
+
+/* .WeekSel button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} */
+
+.Daily-TopBar-Digest{
+
+    grid-column: 4/9;
+    grid-row: 1/9;
+    /* background-color: darkgreen; */
+    
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    
+    
+}
+
+.Daily-TopBar-Digest ul{
+    list-style: none;
+}
+
 .DSBD-Main-Left{
+
+   
+
+
     background-color: blanchedalmond;
     border: 2px rebeccapurple solid;
     overflow: scroll;
+    overflow-y: visible;
     grid-column: 1 / 2; /*  Div shrinking without redefining the layout */
     
     
-
+    padding-left: 2em;
+    padding-right:2em;
+    padding-top: 1em;
+  
+    
 
     
 }
@@ -192,12 +320,24 @@ li{
     background-color: blanchedalmond;
     overflow: scroll;
     grid-column: 2 / 3; /*  Div shrinking without redefining the layout */
+
+    padding-left: 2em;
+    padding-right:2em;
+    padding-top: 1em;
+    
+    /* display: none; */
 }
 
 
-.DSBD-Main-DSP{
+/* .DSBD-Main-DSP{
     margin-top: 2em;
+} */
+
+.DSBD-Main-SingleDSP-Digest{
+    background-color: bisque;
 }
+
+
 
 
 

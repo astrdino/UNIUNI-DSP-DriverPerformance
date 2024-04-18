@@ -9,6 +9,8 @@ const PieChart = ({ data }) => {
       Object.entries(data).map(([key, value]) => ({ key, value }))
     );
 
+    console.log(data);
+
     const colorMap = {
       203: "green",
       211: "#ff4500",
@@ -43,12 +45,12 @@ const PieChart = ({ data }) => {
       .attr("stroke", "white")
       .style("stroke-width", "2px");
 
-    groups
-      .append("text")
-      .text((d) => `${d.data.key}`)
-      .attr("transform", (d) => `translate(${arcGenerator.centroid(d)})`)
-      .style("text-anchor", "middle")
-      .style("font-size", "17px");
+    // groups
+    //   .append("text")
+    //   .text(` ${pieData[0].data.value}`)
+    //   .attr("transform", (d) => `translate(${arcGenerator.centroid(d)})`)
+    //   .style("text-anchor", "middle")
+    //   .style("font-size", "17px");
 
     // svg
     //   .append("circle")
@@ -60,12 +62,50 @@ const PieChart = ({ data }) => {
 
     svg
       .append("rect")
-      .attr("x", 2)
-      .attr("y", 2)
+      .attr("x", 20)
+      .attr("y", 10)
       .attr("width", 10)
       .attr("height", 10)
-      .style("fill", "blue")
+      .style("fill", "green")
       .attr("transform", "translate(200, 100)");
+
+    svg
+      .append("rect")
+      .attr("x", 20)
+      .attr("y", 30)
+      .attr("width", 10)
+      .attr("height", 10)
+      .style("fill", "#FFA500")
+      .attr("transform", "translate(200, 100)");
+
+    groups
+      .append("text")
+      // .text((d) => `Final Finish Amt ${d.data.value}`)
+      .text(`Final Finish Amt: ${pieData[0].data.value}`)
+      .attr("x", 140)
+      .attr("y", 20);
+
+    groups
+      .append("text")
+      // .text((d) => `Final Finish Amt ${d.data.value}`)
+      .text(`Returns Amt: ${pieData[1].data.value}`)
+      .attr("x", 140)
+      .attr("y", 40);
+
+    groups
+      .append("text")
+      // .text((d) => `Final Finish Amt ${d.data.value}`)
+      .text(
+        `::${(
+          (pieData[0].data.value /
+            (pieData[0].data.value + pieData[1].data.value)) *
+          100
+        ).toFixed(2)}%`
+      )
+      .attr("x", 70)
+      .attr("y", 75);
+
+    // svg.append("text").text(`${data.value}`).attr("x", 240).attr("y", 140);
   }, [data]);
 
   return <svg ref={ref}></svg>;

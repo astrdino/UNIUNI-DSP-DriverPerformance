@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+import Button from "@mui/material/Button";
 
 const WeekWheel = ({ selDay }) => {
   const [today, setToday] = useState(format(Date(), "MM-dd-yyyy"));
@@ -96,9 +97,18 @@ const WeekWheel = ({ selDay }) => {
             <Item>Item 5</Item> */}
 
         {previousWeek.map((date, index) => (
-          <button key={index} onClick={handleDaySel} value={date}>
+          // <button >
+
+          // </button>
+          <Button
+            variant="outlined"
+            key={index}
+            onClick={handleDaySel}
+            value={date}
+            style={{ color: "black" }}
+          >
             {date}
-          </button>
+          </Button>
         ))}
         <ArrowRightIcon onClick={nextWeekPrd} />
       </Stack>

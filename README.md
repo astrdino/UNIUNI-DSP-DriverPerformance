@@ -184,6 +184,13 @@ Uniuni Driver Performance for DSPs
 
 - Admin dashboard sidebar layout and menu button
 
+04/17/2024
+
+- New version of Topbar in the Admin DSBD Performance Panel
+  - New Version Modification: Embedded a date picker so user could change range of "previous week" and view according performance history
+  - New Version Modification: New section to display the daily digest
+    ![alt text](image-3.png)
+
 **\*\***Endpoint for the deployment is different than the endpoint for the local test
 
 /^&%&^%_&^&\*\*(&(_^&_%_&$$$*&*$$_$&&_^\*))/
