@@ -1,93 +1,146 @@
-Uniuni Driver Performance for DSPs
+Porject Name:
+
+- Oasis PHX
+
+Project Market Backround:
+
+- Logistics
+- Quality Assurance
+- Global Commerce
+- IT consulting
+
+Project Technical Background:
+
+- Parent system lacks of role-based access control (RBAC) implementation
+- Limit input data authorization
+
+Objectives:
+
+- Orchestrating the on-site operation team and service partners
+- Optimizing the workflow in the logistic operation
+- Outsourced Partners Performance Monitor
+
+Project created with:
+
+- react: 18.2
+- d3: 7.9
+- mui: 5.15.14
+- antd: 5.16.2
+- supabase-js: 2.39
+
+Features (As of 04/18/2024):
+
+- Application Login
+- Application Access Control (Administration + A group of Delivery Service Partner)
 
 02/12/2024
 
-1. Deployment on Vercel
-2. Reading dynamically cloud file (from the Public Directory in this case, the user can choose to read file from Cloud Storage)
+- Proof of Concept (POC)
+- Testing deployment on Vercel
+- Testing data input techniques
+  - Local public directory
+  - Cloud storage (Google Cloud, Supabase, etc)
 
-02/13/2024 (Deployed)
+02/13/2024 (Deployed on Vercel)
 
-1. Multi-Pages
-2. Component Authentication (Without using API)
-   - Endpoint prevention
-3. Date time display
+- Set up React Environment
+- Multi-pages Establishment
+
+  - Install Router
+  - Set up Router
+  - Define Route
+
+- Multi-pages Authentication
+
+  - Draw up Authentication context
+  - Endpoint prevention
+
+- Date Time Set up
+  - Format (MM-dd-YYYY)
+  - Time Zone (Mountain Standard Time GMT -8)
 
 02/14/2024
 
-- Apply login account accessing control (One AuthProvider() with different initialized Context) in one script - "AuthContext"
-- Use different scripts ("ProtectedRoute", "ProtectedRoute_DSP") to make up components for event - "Unauthorized has as to return login page"
+- Working in Access Control
+  - Embeded the authentication context
+  - Applying <ProtectedRoute/> and <ProtectedRoute_DSP/> to seperate "Authorized/Unauthorized" users
 
 02/15/2024
 
-1. Drop List Routing
-2. XLSX data conditional display and analysis
+- Branch navigation routing
+- Data conditional display and analysis in the format of XLSX
 
 02/18/2024
 
-- Cloud Storage System Update: static local directory -> Supabase
-- Supabase Backend API Configuration ("Update")
+- Supabase
+  - Set up cloud storage hooks
+  - Supabase API Configuration
+    - "Update"
 
 03/02/2024
 
-- Integrated Supabase API to fetch data from the cloud storage and displayed in the web component
+- Supabase
+  - Fetch data from supabase cloud storage and display
 
 03/04/2024
 
-- (Deployed) Added enviroment variables in Vercel so client-end will able to connect with Supabase
+(Deployed on Vercel)
 
-- Nested Authentication
+- Added enviroment variables in Vercel so client-end will able to connect with Supabase
 
-  1.  Application regular access control (Admin/DSPs)
-  2.  Supabase senssion control (Log in/out to Supabase when processing data to the database)
+- Authentication Levels in this proejct
 
-  !Policies set up in supabase
+  - Application Access Control (Admin/DSPs)
+  - Supabase Session Control
+    - Connection Policies set up in supabase
+      ! Incomplete, no access for effective Log out. AND the state of session is not interacting with behaviors of the browser.
 
 03/05/24
 
-- Admin Dashboard
-  - Login with input values
-  - Clear value if the "Log In" is hitted
-  - Cloud LogIn UI workflow
+- User-Input Login
+  - To "Admin" Dashboard
+  - To start a Supabase Session
 
 03/06/24
 
-- Admin Dashboard
-  - Managed and organized code of Admin Dashboard Component
-  - Achieved Props in Component
+- Code Organization in Admin Dashboard
 
 03/07/24
 
-- Admin Dashboard
+- Duplicated name prevention in Supabase Cloud Storage
 
-  - Resolved duplicated name file uploading bug
+  - Somehow spbs.update() is not working for me. Tried:
 
-    - Somehow spbs.update() is not working for me. Tried:
+    1.  ArrayBuffer decode
 
-      1.  ArrayBuffer decode
+        - "application/vnd.ms-excel", ContentType in the header is not consistent (ContentType in the request header is correct)
 
-          - "application/vnd.ms-excel", ContentType in the header is not consistent (ContentType in the request header is correct)
+    2.  GetURL with the individual token, though ending up with failed to add "sign/" into PUT request
 
-      2.  GetURL with the individual token, though ending up with failed to add "sign/" into PUT request
-
-    - Instead, I applied two asyn functions - to remove the candidate first before to
-      upload them.
+    - Instead, I applied two asyn functions so they will remove existed file in Supabase Cloud Storage before uploading them.
 
 03/08/24
 
-- Get polices done for uploading + inserting into supbase storage
+- Supabase "Upload" + "Inserting" policies
 
 03/09/24
 
-- Workflow in uploading-mapping operation updated
+- Data Structure
+
+  - The workflow is designed to when the "Update" action called, the process get execute in which the data will be designed to adapt the format in Supabase tables
 
 03/10/24
 
-- Uploading-mapping: insertion
+- Continue, handling "Insert" action
 
-03/11/24 (Deployed)
+03/11/24 (Deployed on Vercel) -------
+
+- Data Structure
+
+  - The workflow of receiving new RD ASMNT
 
 - Resolved updating latest day and batch number in db once get new RD ASMNT
-  - current feature:
+  - current setup:
     1. All B-D in 2024 will be mapped in database if db is empty
     2. If db is not empty, only update the missing B-D
     3. If first a couple of rows are recorded, the other after them won't get updated.
@@ -190,6 +243,22 @@ Uniuni Driver Performance for DSPs
   - New Version Modification: Embedded a date picker so user could change range of "previous week" and view according performance history
   - New Version Modification: New section to display the daily digest
     ![alt text](image-3.png)
+
+04-19-2024
+
+- Admin Dashboard
+
+  - Top Bar Utilities UI Design & Development
+  - Diaplog pop up when click utility options
+
+- Data Structure for Admin-DSP internal communication
+
+  - ![alt text](image-4.png)
+
+- DSP
+  - Workflow in DSP login access control
+    - Data Transition
+      ! User Control
 
 **\*\***Endpoint for the deployment is different than the endpoint for the local test
 

@@ -272,16 +272,36 @@ li{
 
 }
 
+.Daily-TopBar-Side{
+
+    grid-column: 4/9;
+    grid-row: 1/9;
+
+    /* background-color: darkgreen; */
+    padding:3em 1em 1em 1em;
+    /* background-color: cyan; */
+    
+}
+
 /* .WeekSel button{
     display: flex;
     align-items: center;
     justify-content: center;
 } */
 
-.Daily-TopBar-Digest{
 
-    grid-column: 4/9;
-    grid-row: 1/9;
+.Daily-TopBar-Side-Utility{
+
+   display: flex;
+   justify-content: space-around;
+    
+
+}
+
+.Daily-TopBar-Side-Digest{
+
+    /* grid-column: 4/9;
+    grid-row: 1/9; */
     /* background-color: darkgreen; */
     
     display: grid;
@@ -291,7 +311,7 @@ li{
     
 }
 
-.Daily-TopBar-Digest ul{
+.Daily-TopBar-Side-Digest ul{
     list-style: none;
 }
 
@@ -388,7 +408,11 @@ li{
 
 
 
+/*******/
 
+.DSP-COTNER{
+    background-color: aquamarine;
+}
 
 
 /* .Home-Login > div{
