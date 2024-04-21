@@ -5,6 +5,8 @@ import * as XLSX from "xlsx";
 import DateTime from "./utility/dateTime";
 import FetchData from "./utility/fetchData";
 
+import { useTranslation } from "react-i18next";
+
 //Fronend
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
@@ -17,6 +19,7 @@ import Button from "@mui/material/Button";
 import "../App.css";
 
 const HomePage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate(); // Send "Data Package" with "Navigate"
   const [selectedDSP_path, setSelectedDSP_path] = useState("");
   const [selectedDSP, setSelectedDSP] = useState(""); //Selected DSP Name
@@ -58,7 +61,7 @@ const HomePage = () => {
       <div className="APP-MIDDLE">
         <div className="APP-COTNER">
           <div className="APP-Header">
-            <h1>Oasis PHX</h1>
+            <h1>{t("Oasis PHX")}</h1>
           </div>
 
           <div className="APP-Time">

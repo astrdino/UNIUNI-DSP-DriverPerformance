@@ -33,6 +33,8 @@ Features (As of 04/18/2024):
 - Application Login
 - Application Access Control (Administration + A group of Delivery Service Partner)
 
+- Split Screen
+
 02/12/2024
 
 - Proof of Concept (POC)
@@ -259,6 +261,14 @@ Features (As of 04/18/2024):
   - Workflow in DSP login access control
     - Data Transition
       ! User Control
+
+04-20-2024
+
+- DSP Main Page (General)
+  - Basic UI workflow design
+    ![alt text](image-5.png)
+  - Dialog
+    ![alt text](image-6.png)
 
 **\*\***Endpoint for the deployment is different than the endpoint for the local test
 

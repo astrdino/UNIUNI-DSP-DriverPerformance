@@ -411,7 +411,14 @@ li{
 /*******/
 
 .DSP-COTNER{
-    background-color: aquamarine;
+    /* background-color: aquamarine; */
+}
+
+
+.DSP-Digest-Context-DLR-BN p{
+
+    margin-right: 1em;
+
 }
 
 

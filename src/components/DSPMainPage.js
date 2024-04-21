@@ -6,29 +6,21 @@ import { DataGrid } from "@mui/x-data-grid";
 //Front-end
 import Button from "@mui/material/Button";
 
+import DSP_DispatchAssign from "./DSP/DSP_DispatchAssign";
+import { DSP_Digest } from "./DSP/DSP_Digest";
+
 function DSPMainPage() {
   var location = useLocation();
+  var DSP = location.state?.userDSP; //Get Current DSP Name
 
-  // var data = null
-  // if(location.state){
-
-  //   if(location.state.selData){
-
-  //   }
-
+  // function gen218() {
+  //   return <p>Fake List haha</p>;
   // }
-  //var data = location.state?.selData;
-  var data = location.state?.userDSP;
-  function gen218() {
-    return <p>Fake List haha</p>;
-  }
 
   return (
     <div className="DSP-COTNER">
-      <h1>Hello, {data} </h1>
-      <Button>Log out</Button>
-      <p>Date </p>
-      {gen218()}
+      {DSP_Digest(DSP)}
+      <DSP_DispatchAssign DPdPdata={DSP}></DSP_DispatchAssign>
     </div>
   );
 }
