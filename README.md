@@ -14,7 +14,7 @@ Project Technical Background:
 - Parent system lacks of role-based access control (RBAC) implementation
 - Limit input data authorization
 
-Objectives:
+Project Objectives:
 
 - Orchestrating the on-site operation team and service partners
 - Optimizing the workflow in the logistic operation
@@ -28,12 +28,13 @@ Project created with:
 - antd: 5.16.2
 - supabase-js: 2.39
 
-Features (As of 04/18/2024):
+Project Features (As of 04/18/2024):
 
 - Application Login
 - Application Access Control (Administration + A group of Delivery Service Partner)
+- Split Screen ✅
 
-- Split Screen
+Project Log:
 
 02/12/2024
 
