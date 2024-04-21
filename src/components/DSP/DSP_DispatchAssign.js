@@ -29,8 +29,30 @@ import AssignmentReturnIcon from "@mui/icons-material/AssignmentReturn";
 import Box from "@mui/material/Box";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 const DSP_DispatchAssign = ({ DPdPdata }) => {
-  const [dialog_open_asnmnt, setDialog_open_asnmnt] = useState(false);
+  const newDriver_Input = (
+    <div style={{ display: "flex" }}>
+      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+        <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+        <TextField id="input-with-sx" label="Driver" variant="standard" />
+      </Box>
+      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+        <AssignmentReturnIcon></AssignmentReturnIcon>
+        <TextField id="input-with-sx" label="Assign Range" variant="standard" />
+        -
+        <TextField id="input-with-sx" label="" variant="standard" />
+      </Box>
+    </div>
+  );
 
+  const [dialog_open_asnmnt, setDialog_open_asnmnt] = useState(false);
+  const [dialogCmpnt, settDialogCmpnt] = useState([
+    <>
+      {newDriver_Input}
+      {newDriver_Input}
+      {newDriver_Input}
+      {newDriver_Input}
+    </>,
+  ]);
   const handleDialogOpen_asnmnt = () => {
     setDialog_open_asnmnt(true);
   };
@@ -39,7 +61,10 @@ const DSP_DispatchAssign = ({ DPdPdata }) => {
     setDialog_open_asnmnt(false);
   };
 
-  const addNewDriverHandle = () => {};
+  const addNewDriverHandle = () => {
+    const newDriverInput = <>{newDriver_Input}</>;
+    settDialogCmpnt([...dialogCmpnt, newDriverInput]);
+  };
 
   return (
     <div className="DSP-NewDisplatch">
@@ -57,23 +82,12 @@ const DSP_DispatchAssign = ({ DPdPdata }) => {
           {"Schedule Assignment"}
         </DialogTitle>
         <DialogContent style={{ display: "grid" }}>
-          Schdule Day: 04-35-3035
-          <div style={{ display: "flex" }}>
-            <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-              <AccountCircle sx={{ color: "action.active", mr: 1, my: 0.5 }} />
-              <TextField id="input-with-sx" label="Driver" variant="standard" />
-            </Box>{" "}
-            <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-              <AssignmentReturnIcon></AssignmentReturnIcon>
-              <TextField
-                id="input-with-sx"
-                label="Assign Range"
-                variant="standard"
-              />
-              -
-              <TextField id="input-with-sx" label="" variant="standard" />
-            </Box>
+          <div>
+            <p>Schdule Day: 04-35-3035 </p>
+            <p>Estimated Volume: 34</p>
           </div>
+
+          <div style={{ marginBottom: "1em" }}>{dialogCmpnt}</div>
           <div style={{ display: "flex" }}>
             <AddBoxIcon onClick={addNewDriverHandle}> </AddBoxIcon>Add Driver
           </div>

@@ -1,26 +1,26 @@
-Porject Name:
+# Porject Name:
 
 - Oasis PHX
 
-Project Market Backround:
+# Project Market Backround:
 
 - Logistics
 - Quality Assurance
 - Global Commerce
 - IT consulting
 
-Project Technical Background:
+# Project Technical Background:
 
 - Parent system lacks of role-based access control (RBAC) implementation
 - Limit input data authorization
 
-Project Objectives:
+# Project Objectives:
 
 - Orchestrating the on-site operation team and service partners
 - Optimizing the workflow in the logistic operation
 - Outsourced Partners Performance Monitor
 
-Project created with:
+# Project created with:
 
 - react: 18.2
 - d3: 7.9
@@ -28,15 +28,16 @@ Project created with:
 - antd: 5.16.2
 - supabase-js: 2.39
 
-Project Features (As of 04/18/2024):
+# Project Features (As of 04/18/2024):
 
 - Application Login
 - Application Access Control (Administration + A group of Delivery Service Partner)
 - Split Screen ✅
+- Languages Switch ▪️ ▫️
 
-Project Log:
+# Project Log:
 
-02/12/2024
+## 02/12/2024
 
 - Proof of Concept (POC)
 - Testing deployment on Vercel
@@ -136,36 +137,39 @@ Project Log:
 
 - Continue, handling "Insert" action
 
-03/11/24 (Deployed on Vercel) -------
+03/11/24 (Deployed on Vercel)
 
 - Data Structure
 
   - The workflow of receiving new RD ASMNT
 
-- Resolved updating latest day and batch number in db once get new RD ASMNT
+- Update latest day and batch number in the database once get new RD ASMNT
   - current setup:
-    1. All B-D in 2024 will be mapped in database if db is empty
-    2. If db is not empty, only update the missing B-D
+    1. All B-D 100 days prior to current day will be mapped in database if database is empty
+    2. If database is not empty, only update the missing B-D
     3. If first a couple of rows are recorded, the other after them won't get updated.
 
 03/13/2024
 
-- Function "Upload Order List to Supabase Storage"
-  - Multiple conditions (Datepicker + File uploading)
+- Handle Upload Order List to Supabase Storage
 
 03/14/2024
 
-- Added one more column in supabase so two different batch number will be placed in seperated column
+- Data Structure
+
   - One BatchNum One Column
-- Check in the supabase table if the given vaue is stored in any columns
-- Logic Check if the batch in the sheet is corresponding manually
+
+- Condition Check
+  - If the given value is stored in any columns
+  - If the batch in the sheet matches with the reality
 
 03/15/2024
 
-- Create new tables by calling PostgreSQL function in React
-  - ...contain policies generating and RLS active
+- PostgreSql in Supabase
+- Create new tables
+- Relative policies setup and active RLS
 
-03/16/2024
+03/16/2024 -----------
 
 - PostgreSQL function is working on SQL edition in Supabase but not return back to the Application end in react
   so I apply an alternative which simply utilizing "Select()", if the table not existed, specific type of error is thrown, otherwise is it existed
@@ -294,3 +298,6 @@ e.g. Block the admin attempt in DSP login page
 
 - Chrome working
 - Edge not
+
+Emoji Access
+https://gist.github.com/roachhd/1f029bd4b50b8a524f3c
