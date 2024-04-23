@@ -28,7 +28,7 @@ import TextField from "@mui/material/TextField";
 import AssignmentReturnIcon from "@mui/icons-material/AssignmentReturn";
 import Box from "@mui/material/Box";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-const DSP_DispatchAssign = ({ DPdPdata }) => {
+const DSP_DispatchAssign = ({ DSPdata }) => {
   const newDriver_Input = (
     <div style={{ display: "flex" }}>
       <Box sx={{ display: "flex", alignItems: "flex-end" }}>
@@ -70,7 +70,7 @@ const DSP_DispatchAssign = ({ DPdPdata }) => {
     <div className="DSP-NewDisplatch">
       <h3>Schedule New Dispatch</h3>
       <button onClick={handleDialogOpen_asnmnt}>
-        Assignment for "next day" {DPdPdata}
+        Assignment for "next day" {DSPdata}
       </button>
       <Dialog
         open={dialog_open_asnmnt}

@@ -1,26 +1,26 @@
-# Porject Name
+## Porject Name
 
-Oasis PHX
+### Oasis PHX
 
-# Project Market Backround:
+## Project Market Backround
 
 - Logistics
 - Quality Assurance
 - Global Commerce
 - IT consulting
 
-# Project Technical Background:
+## Project Technical Background
 
 - Parent system lacks of role-based access control (RBAC) implementation
 - Limit input data authorization
 
-# Project Objectives:
+## Project Objectives:
 
 - Orchestrating the on-site operation team and service partners
 - Optimizing the workflow in the logistic operation
 - Outsourced Partners Performance Monitor
 
-# Project created with:
+## Project created with:
 
 - react: 18.2
 - d3: 7.9
@@ -28,16 +28,16 @@ Oasis PHX
 - antd: 5.16.2
 - supabase-js: 2.39
 
-# Project Features (As of 04/18/2024):
+## Project Features (As of 04/18/2024):
 
-- Application Login
-- Application Access Control (Administration + A group of Delivery Service Partner)
-- Split Screen ✅
-- Languages Switch ▪️ ▫️
+✅ Application Login
+✅ Application Access Control (Administration + A group of Delivery Service Partner)
+✅ Split Screen
+▪️ ▫️ Languages Switch
 
-# Project Log:
+## Project Log:
 
-## 02/12/2024
+### 02/12/2024
 
 - Proof of Concept (POC)
 - Testing deployment on Vercel
@@ -45,7 +45,7 @@ Oasis PHX
   - Local public directory
   - Cloud storage (Google Cloud, Supabase, etc)
 
-02/13/2024 (Deployed on Vercel)
+### 02/13/2024 (Deployed on Vercel)
 
 - Set up React Environment
 - Multi-pages Establishment
@@ -267,13 +267,34 @@ Oasis PHX
     - Data Transition
       ! User Control
 
-04-20-2024
+### 04-20-2024
 
 - DSP Main Page (General)
   - Basic UI workflow design
     ![alt text](image-5.png)
   - Dialog
     ![alt text](image-6.png)
+
+### 04-21-2024
+
+- Authentication
+
+  - Application force-logout - the user has to re-log in the system if clicking "Go Back"
+
+- Back end Bug
+
+  - Fix bug in which failed to map new "Rd Asssignment" to Supabase table if the orginal file lacks of Batch Number value fill in
+
+- DatePicker pop-up position bug
+
+### 04-22-2024
+
+- Individual DSP Dashboard Backend
+
+  - Single order-list in the format e.g. [203:[...],211:[...],211:[...]]
+
+- Local Data Organization and Related Functions
+  - External Object File for DSPs Data (Driver ID, etc.)
 
 **\*\***Endpoint for the deployment is different than the endpoint for the local test
 

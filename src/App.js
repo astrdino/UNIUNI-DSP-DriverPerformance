@@ -12,7 +12,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import ProtectedRoute_DSP from "./ProtectedRoute_DSP";
 // import PrivateRoute from './PrivateRoute';
 
-import { AuthProvider } from "./AuthContext"; // Adjust the import path as needed
+import { AuthProvider } from "./AuthContext";
 
 function App() {
   const [cell, setCell] = useState();

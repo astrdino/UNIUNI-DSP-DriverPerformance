@@ -87,11 +87,22 @@ export const FetchOrderDetail = ({ selDayFromParent }) => {
           //Get storage list from supabase storage
           const { data, error } = await supabase.storage
             .from("admin-data-bucket")
-            .list("Main");
+            .list("Main"); //"data" returns all files within the folder "Main"
 
           if (error) {
             throw error;
           } else {
+            //There is a better way to search target file
+
+            // var targetFileName = `${selctedDay}-order-lists.xlsx`;
+
+            // var targetFile = data.find((file) => file.name === targetFileName);
+
+            // if (targetFile !== undefined) {
+            //   console.log(targetFile);
+            // } else {
+            //   throw error;
+            // }
             var found = false;
             var fileName = "";
 

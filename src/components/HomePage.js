@@ -15,11 +15,19 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
 
+//Utility
+import { DSPs } from "./utility/Roles";
+
+//Auth
+
+import { useAuth } from "../AuthContext";
+
 //External CSS
 import "../App.css";
 
 const HomePage = () => {
   const { t } = useTranslation();
+  const { logout } = useAuth();
   const navigate = useNavigate(); // Send "Data Package" with "Navigate"
   const [selectedDSP_path, setSelectedDSP_path] = useState("");
   const [selectedDSP, setSelectedDSP] = useState(""); //Selected DSP Name
@@ -27,15 +35,20 @@ const HomePage = () => {
   // const [selDSP, setSelDSP] = useState(null); //Selected DSP
 
   //Front-end Display
-  const DSP = [
-    "Top Car Yarde",
-    "Haulblaze",
-    "Arcadia",
-    "DEL",
-    "Desert",
-    "L Dan",
-    "Get Ya Roll",
-  ];
+  // const DSP = [
+  //   "Top Car Yarde",
+  //   "Haulblaze",
+  //   "Acadia",
+  //   "DEL",
+  //   "Desert",
+  //   "L Dan",
+  //   "Get Ya Roll",
+  // ];
+
+  //Force Logout
+  useEffect(() => {
+    logout();
+  });
 
   const handleChange = (event, child) => {
     var sel = child["props"]["sel-value"]; //Selected Name
@@ -61,7 +74,7 @@ const HomePage = () => {
       <div className="APP-MIDDLE">
         <div className="APP-COTNER">
           <div className="APP-Header">
-            <h1>{t("Oasis PHX")}</h1>
+            <h1>Oasis PHX</h1>
           </div>
 
           <div className="APP-Time">
@@ -87,9 +100,13 @@ const HomePage = () => {
                   <MenuItem component={Link} to="login" key={0}>
                     PHX Warehouse
                   </MenuItem>
-                  {DSP.map((item, index) => (
-                    <MenuItem value="/DSPMain" sel-value={item} key={index + 1}>
-                      {item}
+                  {DSPs.map((DSP, index) => (
+                    <MenuItem
+                      value="/DSPMain"
+                      sel-value={DSP.name}
+                      key={index + 1}
+                    >
+                      {DSP.name}
                     </MenuItem>
                   ))}
 

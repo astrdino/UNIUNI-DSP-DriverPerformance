@@ -8,6 +8,9 @@ import * as XLSX from "xlsx";
 import { supabase } from "../../supabaseClient";
 import { endOfTomorrow } from "date-fns";
 
+//Utility
+import findRolesbyID from "./Roles";
+
 export const SPBS_Upload = () => {
   const rdAsmt_table_name = "AZ-RD_ASMT_new"; //AZ Rd Assignment supabase table
 
@@ -99,7 +102,13 @@ export const SPBS_Upload = () => {
             const latestWorksheet = workbook.Sheets[workbook.SheetNames[cnt]];
             const latestDay_RA = workbook.SheetNames[cnt];
 
-            var latestBatch_RA = latestWorksheet["C3"].v;
+            var latestBatch_RA = "";
+
+            if (latestWorksheet["C3"] === undefined) {
+              continue;
+            } else {
+              latestBatch_RA = latestWorksheet["C3"].v;
+            }
 
             var arrived_amt_list = [],
               addOn_amt_list = [],
@@ -621,28 +630,32 @@ export const SPBS_Upload = () => {
           var thisDriver = parseInt(Object.values(d)[i]["service_number"]); // plus "convertion"
           // var thisDsp = ''
 
-          if (26416 <= thisDriver && thisDriver <= 26465) {
-            this_DSP.current = "DEL";
-          } else if (20553 <= thisDriver && thisDriver <= 20602) {
-            this_DSP.current = "Arcadia";
-          } else if (16549 <= thisDriver && thisDriver <= 16588) {
-            this_DSP.current = "Desert";
-          } else if (21088 <= thisDriver && thisDriver <= 21137) {
-            this_DSP.current = "Top Car Yarde";
-          } else if (22300 <= thisDriver && thisDriver <= 22349) {
-            this_DSP.current = "Get Ya Roll";
-          } else if (12948 <= thisDriver && thisDriver <= 12997) {
-            this_DSP.current = "L Dan";
-          } else if (15287 <= thisDriver && thisDriver <= 15336) {
-            this_DSP.current = "Haulblaze";
-          } else {
-            //Functions Handles
-            this_DSP.current = "PHX Warehouse";
-          }
+          this_DSP.current = findRolesbyID(
+            parseInt(Object.values(d)[i]["service_number"])
+          );
 
-          if (!DSP_List.current.includes(this_DSP.current)) {
-            DSP_List.current.push(this_DSP.current);
-          }
+          // if (26416 <= thisDriver && thisDriver <= 26465) {
+          //   this_DSP.current = "DEL";
+          // } else if (20553 <= thisDriver && thisDriver <= 20602) {
+          //   this_DSP.current = "Acadia";
+          // } else if (16549 <= thisDriver && thisDriver <= 16588) {
+          //   this_DSP.current = "Desert";
+          // } else if (21088 <= thisDriver && thisDriver <= 21137) {
+          //   this_DSP.current = "Top Car Yarde";
+          // } else if (22300 <= thisDriver && thisDriver <= 22349) {
+          //   this_DSP.current = "Get Ya Roll";
+          // } else if (12948 <= thisDriver && thisDriver <= 12997) {
+          //   this_DSP.current = "L Dan";
+          // } else if (15287 <= thisDriver && thisDriver <= 15336) {
+          //   this_DSP.current = "Haulblaze";
+          // } else {
+          //   //Functions Handles
+          //   this_DSP.current = "PHX Warehouse";
+          // }
+
+          // if (!DSP_List.current.includes(this_DSP.current)) {
+          //   DSP_List.current.push(this_DSP.current);
+          // }
 
           // console.log(DSP_List.current);
           // console.log(thisDriver);
@@ -908,11 +921,13 @@ export const SPBS_Upload = () => {
             accept=".xls,.xlsx"
           />
           <DatePicker
+            size="Large"
             selected={selectedDate_OL}
             onChange={(date) => setSelectedDate_OL(date)}
             dateFormat="MM/dd/yyyy"
             isClearable
             placeholderText="Select a date for order list"
+            popperPlacement="bottom-end"
           />
 
           <button onClick={UPLOAD_OL_BTN_handle}>Upload Order List</button>

@@ -15,6 +15,7 @@ import axios from "axios";
 import DateTime from "./utility/dateTime";
 import SidebarFunc from "./frontend/sidebarFunction";
 import WeekWheel from "./frontend/weekWheel";
+import DBstatus from "./utility/DBStatus";
 // import {FetchData} from './utility/fetchData';
 import { FetchData_SPBS } from "./utility/fetchData_SPBS";
 import { SPBS_SignInForm } from "./utility/SPBS_SignInForm";
@@ -308,7 +309,7 @@ function DashboardPage() {
             </div>
 
             <div className="Admin-Dsbd-DataVsl-Info">
-              <FetchData_SPBS></FetchData_SPBS>
+              <DBstatus></DBstatus>
             </div>
           </div>
           <div

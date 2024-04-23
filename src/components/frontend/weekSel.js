@@ -75,7 +75,7 @@ const WeekSel = ({ selDay }) => {
 
   return (
     <>
-      <div class={"WeekSel"}>
+      <div className={"WeekSel"}>
         {previousWeek.map((date, index) => (
           // <button >
 
