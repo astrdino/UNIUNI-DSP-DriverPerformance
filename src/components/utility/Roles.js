@@ -14,7 +14,7 @@ const DSP_List = [
   "Get Ya Roll",
 ];
 
-export const DSPs = [
+export const Roles = [
   {
     name: "Top Car Yarde",
     range: [21088, 21137],
@@ -40,36 +40,45 @@ export const DSPs = [
     name: "Get Ya Roll",
     range: [22300, 22349],
   },
+
+  {
+    name: `${warehouse.location} Warehouse`,
+    range: [160991, 160999],
+  },
+  {
+    name: `${warehouse.location} Route`,
+    range: [160001, 160100],
+  },
 ];
 
-export default function findDSPbyDrID(idInput) {
-  // console.log(DSPs);
-  for (let DSP of DSPs) {
-    if (idInput >= DSP.range[0] && idInput <= DSP.range[1]) {
-      return DSP.name;
-    }
-  }
-}
+// export default function findDSPbyDrID(idInput) {
+//   // console.log(DSPs);
+//   for (let DSP of DSPs) {
+//     if (idInput >= DSP.range[0] && idInput <= DSP.range[1]) {
+//       return DSP.name;
+//     }
+//   }
+// }
 
-export function findRolesbyID(idInput) {
-  for (let DSP of DSPs) {
-    if (idInput >= DSP.range[0] && idInput <= DSP.range[1]) {
-      return DSP.name;
-    }
-
-    if (
-      idInput >= warehouse["functionRange"][0] &&
-      idInput <= warehouse["functionRange"][1]
-    ) {
-      return "PHX Warehouse";
+export default function findRolesbyID(idInput) {
+  for (let role of Roles) {
+    if (idInput >= role.range[0] && idInput <= role.range[1]) {
+      return role.name;
     }
 
-    if (
-      idInput >= warehouse["routeRange"][0] &&
-      idInput <= warehouse["routeRange"][1]
-    ) {
-      return "PHX Warehouse";
-    }
+    // if (
+    //   idInput >= warehouse["functionRange"][0] &&
+    //   idInput <= warehouse["functionRange"][1]
+    // ) {
+    //   return "PHX Warehouse";
+    // }
+
+    // if (
+    //   idInput >= warehouse["routeRange"][0] &&
+    //   idInput <= warehouse["routeRange"][1]
+    // ) {
+    //   return "PHX Warehouse";
+    // }
   }
 }
 

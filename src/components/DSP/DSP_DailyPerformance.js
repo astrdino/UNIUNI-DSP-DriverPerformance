@@ -17,6 +17,14 @@ export const DSP_DailyPerformance = ({ DSPname }) => {
   const [selctedDay, setselctedDay] = useState('04-21-2024"');
   const [selctedDayData, setSelctedDayData] = useState(null); // List of all orders in one day
 
+  //Data for front end display
+
+  const [DProws, setDProws] = useState([]); //Daily Performance front end display rows
+
+  var columns: GridColDef[] = [
+    { field: "col1", headerName: "Driver ID", width: 100 },
+    { field: "col2", headerName: "Finish Amt", width: 150 },
+  ];
   /*Render Initialization Prevention */
   // Apply this useEffect to update the ref after the first render
   useEffect(() => {
@@ -54,6 +62,7 @@ export const DSP_DailyPerformance = ({ DSPname }) => {
     };
 
     if (renderCount.current > 1 && allowEffect) {
+      setDProws([]); //Clear display last-render-data cache
       fetchFromTable();
     }
 
@@ -65,43 +74,45 @@ export const DSP_DailyPerformance = ({ DSPname }) => {
     if (renderCount.current > 1 && allowEffect) {
       console.log(`print ${DSPname} for me`);
 
-      var dailyData = [];
-      for (let i = 0; i < selctedDayData.length; i++) {
-        if (findDSPbyDrID(selctedDayData[i]["service_number"]) === DSPname) {
-          //console.log(selctedDayData[i]);
+      //Different type of clustring
+      var dailyDataByState = [];
+      var dailyDataByDriver = [];
 
-          const key = selctedDayData[i]["state"];
+      if (selctedDayData) {
+        for (let i = 0; i < selctedDayData.length; i++) {
+          if (findDSPbyDrID(selctedDayData[i]["service_number"]) === DSPname) {
+            const stateKey = selctedDayData[i]["state"];
+            const driverKey = selctedDayData[i]["service_number"];
 
-          if (!dailyData[key]) {
-            dailyData[key] = [];
+            if (!dailyDataByState[stateKey]) {
+              dailyDataByState[stateKey] = [];
+            }
+
+            if (!dailyDataByDriver[driverKey]) {
+              dailyDataByDriver[driverKey] = [];
+            }
+
+            dailyDataByState[stateKey].push(selctedDayData[i]);
+            dailyDataByDriver[driverKey].push(selctedDayData[i]);
           }
-
-          dailyData[key].push(selctedDayData[i]);
         }
+
+        console.log(dailyDataByState);
+        console.log(dailyDataByDriver);
+
+        // Map data to front end display rows
+        const newDProws = [...DProws]; //Must to use new array to accumulate changes to avoid asyn call set with the for loop
+        var dlist = Object.keys(dailyDataByDriver); //["12543",'12321",...]
+        for (let i = 0; i < dlist.length; i++) {
+          const driver = {
+            id: i + 1,
+            col1: dlist[i],
+            col2: dailyDataByDriver[dlist[i]].length,
+          };
+          newDProws.push(driver); // Accumulate data into the new array
+        }
+        setDProws(newDProws);
       }
-
-      console.log(dailyData);
-
-      // const fltdDailyData = selctedDayData.reduce((accu, order) => {
-      //   const key = order.state;
-
-      //   if (!order[key]) {
-      //     accu[key] = [];
-      //   }
-
-      //   if (findDSPbyDrID(order.service_number) === DSPname) {
-      //     accu[key].push(order);
-      //   }
-
-      //   console.log(accu[key]);
-      //   console.log(findDSPbyDrID(order.service_number));
-
-      //   return accu;
-      // });
-
-      // console.log(fltdDailyData);
-
-      // console.log(selctedDayData);
     }
   }, [selctedDayData]);
 
@@ -115,6 +126,24 @@ export const DSP_DailyPerformance = ({ DSPname }) => {
       />
       <p>Total Assigned Parcels:</p>
       <p>Total In-Transit Parcels:</p>
+
+      {DProws.length > 0 ? (
+        <DataGrid
+          rows={DProws}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 10,
+              },
+            },
+          }}
+          pageSizeOptions={[5]}
+          disableRowSelectionOnClick
+        />
+      ) : (
+        <div />
+      )}
     </div>
   );
 };

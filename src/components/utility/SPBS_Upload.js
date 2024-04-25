@@ -10,6 +10,7 @@ import { endOfTomorrow } from "date-fns";
 
 //Utility
 import findRolesbyID from "./Roles";
+import findDSPbyDrID from "./Roles";
 
 export const SPBS_Upload = () => {
   const rdAsmt_table_name = "AZ-RD_ASMT_new"; //AZ Rd Assignment supabase table
@@ -630,7 +631,7 @@ export const SPBS_Upload = () => {
           var thisDriver = parseInt(Object.values(d)[i]["service_number"]); // plus "convertion"
           // var thisDsp = ''
 
-          this_DSP.current = findRolesbyID(
+          this_DSP.current = findDSPbyDrID(
             parseInt(Object.values(d)[i]["service_number"])
           );
 

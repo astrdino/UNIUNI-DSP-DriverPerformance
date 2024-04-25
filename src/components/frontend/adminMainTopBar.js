@@ -29,7 +29,11 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 
 //Back End
-import { SendReminder } from "../../assets/CllickingHandles/Admin2DSP_ReminderHandle";
+import {
+  sendEmail,
+  receiveFileHandle,
+} from "../../assets/functionality/Admin2DSP_ReminderHandle";
+import emailjs from "emailjs-com";
 
 const AdminMainTopBar = ({ selDay, day2Parent }) => {
   const [childData, setChildData] = useState(""); //Receive data from the child component
@@ -71,6 +75,7 @@ const AdminMainTopBar = ({ selDay, day2Parent }) => {
           ></AlarmOffIcon>
           <MoneyOffIcon fontSize="large"></MoneyOffIcon>
           <InvoiceIcon fontSize="large"></InvoiceIcon>
+
           <Dialog
             open={dialog_open}
             onClose={handleDialogClose}
@@ -79,6 +84,18 @@ const AdminMainTopBar = ({ selDay, day2Parent }) => {
           >
             <DialogTitle id="alert-dialog-title">{"218 Reminder"}</DialogTitle>
             <DialogContent style={{ display: "grid" }}>
+              {/* <form className="contact-form" onSubmit={sendEmail}>
+                <input type="hidden" name="contact_number" />
+                <label>Name</label>
+                <input type="text" name="from_name" />
+                <label>Email</label>
+                <input type="email" name="to_email" />
+                <label>Subject</label>
+                <input type="text" name="subject" />
+                <label>Message</label>
+                <textarea name="html_message" />
+                <input type="submit" value="Send" />
+              </form> */}
               <Button
                 component="label"
                 variant="outlined"
@@ -88,10 +105,10 @@ const AdminMainTopBar = ({ selDay, day2Parent }) => {
                 Upload
                 <input
                   type="file"
-                  accept=".csv"
+                  accept="*"
                   hidden
-                  onChange={() => {
-                    console.log("Ww");
+                  onChange={(file) => {
+                    receiveFileHandle(file);
                   }}
                 />
               </Button>
@@ -112,7 +129,7 @@ const AdminMainTopBar = ({ selDay, day2Parent }) => {
               <Button
                 onClick={() => {
                   handleDialogClose();
-                  SendReminder();
+                  sendEmail();
                 }}
                 autoFocus
               >

@@ -2,25 +2,25 @@
 
 ### Oasis PHX
 
-## Project Market Backround
+## Project Market Scope
 
 - Logistics
 - Quality Assurance
 - Global Commerce
 - IT consulting
 
-## Project Technical Background
+## Project Objectives
+
+- Orchestrating data between the on-site operation team and service partners
+- Optimizing the workflow in the logistic operation
+- Outsourced Partners Performance Monitor
+
+## Project Background
 
 - Parent system lacks of role-based access control (RBAC) implementation
 - Limit input data authorization
 
-## Project Objectives:
-
-- Orchestrating the on-site operation team and service partners
-- Optimizing the workflow in the logistic operation
-- Outsourced Partners Performance Monitor
-
-## Project created with:
+## Project created with
 
 - react: 18.2
 - d3: 7.9
@@ -28,14 +28,14 @@
 - antd: 5.16.2
 - supabase-js: 2.39
 
-## Project Features (As of 04/18/2024):
+## Project Features (As of 04/18/2024)
 
-✅ Application Login
-✅ Application Access Control (Administration + A group of Delivery Service Partner)
-✅ Split Screen
-▪️ ▫️ Languages Switch
+- ✅ Application Login
+- ✅ Application Access Control (Administration + A group of Delivery Service Partner)
+- ✅ Split Screen
+- ▫️ Languages Switch
 
-## Project Log:
+## Project Log
 
 ### 02/12/2024
 
@@ -63,30 +63,30 @@
   - Format (MM-dd-YYYY)
   - Time Zone (Mountain Standard Time GMT -8)
 
-02/14/2024
+### 02/14/2024
 
 - Working in Access Control
   - Embeded the authentication context
   - Applying <ProtectedRoute/> and <ProtectedRoute_DSP/> to seperate "Authorized/Unauthorized" users
 
-02/15/2024
+### 02/15/2024
 
 - Branch navigation routing
 - Data conditional display and analysis in the format of XLSX
 
-02/18/2024
+### 02/18/2024
 
 - Supabase
   - Set up cloud storage hooks
   - Supabase API Configuration
     - "Update"
 
-03/02/2024
+### 03/02/2024
 
 - Supabase
   - Fetch data from supabase cloud storage and display
 
-03/04/2024
+### 03/04/2024
 
 (Deployed on Vercel)
 
@@ -99,17 +99,17 @@
     - Connection Policies set up in supabase
       ! Incomplete, no access for effective Log out. AND the state of session is not interacting with behaviors of the browser.
 
-03/05/24
+### 03/05/24
 
 - User-Input Login
   - To "Admin" Dashboard
   - To start a Supabase Session
 
-03/06/24
+### 03/06/24
 
 - Code Organization in Admin Dashboard
 
-03/07/24
+### 03/07/24
 
 - Duplicated name prevention in Supabase Cloud Storage
 
@@ -123,21 +123,21 @@
 
     - Instead, I applied two asyn functions so they will remove existed file in Supabase Cloud Storage before uploading them.
 
-03/08/24
+### 03/08/24
 
 - Supabase "Upload" + "Inserting" policies
 
-03/09/24
+### 03/09/24
 
 - Data Structure
 
   - The workflow is designed to when the "Update" action called, the process get execute in which the data will be designed to adapt the format in Supabase tables
 
-03/10/24
+### 03/10/24
 
 - Continue, handling "Insert" action
 
-03/11/24 (Deployed on Vercel)
+### 03/11/24 (Deployed on Vercel)
 
 - Data Structure
 
@@ -149,11 +149,11 @@
     2. If database is not empty, only update the missing B-D
     3. If first a couple of rows are recorded, the other after them won't get updated.
 
-03/13/2024
+### 03/13/2024
 
 - Handle Upload Order List to Supabase Storage
 
-03/14/2024
+### 03/14/2024
 
 - Data Structure
 
@@ -163,56 +163,57 @@
   - If the given value is stored in any columns
   - If the batch in the sheet matches with the reality
 
-03/15/2024
+### 03/15/2024
 
 - PostgreSql in Supabase
 - Create new tables
 - Relative policies setup and active RLS
 
-03/16/2024 -----------
+### 03/16/2024 -----------
 
 - PostgreSQL function is working on SQL edition in Supabase but not return back to the Application end in react
   so I apply an alternative which simply utilizing "Select()", if the table not existed, specific type of error is thrown, otherwise is it existed
 
-03/17/2024
+### 03/17/2024
 
 - Signle Day OrderList Uploading -> Single Day OrderList Table (Unfinished: "If table is existed, remove it + upload new")
 
-03/18/2024
+### 03/18/2024
 
 - Signle Day OrderList Uploading -> Single Day OrderList Table
 
-03/19/2024
+### 03/19/2024
 
 - Single day dispatch order list display
 - Driver DSP sorting
 
-03/20/2024
+### 03/20/2024
 
 - Seperate "Display" and "Upload" section
 
-03/23/2024
+### 03/23/2024
 
 - Single DSP Single Day
   - "Date" + "DSP" Selection backend
 
-03/25/2025
+### 03/25/2025
 
 - Home, Login(Main/DSP) frontend
 
-03/26/2025
+### 03/26/2025
 
 - Home, Login(Main/DSP) frontend
 - Admin Dsbd frontend
 
-03/27/2024
+### 03/27/2024
+
 ![alt text](image.png)
 
-04/03/2024
+### 04/03/2024
 
 - Expand columns for new "rd assignment AZ" in the supabase table
 
-04/04/2024
+### 04/04/2024
 
 - Scripts organizaiton (admin dashboard date selection)
 
@@ -295,6 +296,17 @@
 
 - Local Data Organization and Related Functions
   - External Object File for DSPs Data (Driver ID, etc.)
+
+### 04-23-2024
+
+- Data Structure
+  - Environment variables orginization (DSPs list to Roles list including roles like "PHX Route")
+
+### 04-24-2024
+
+- Back End
+  - Fetch daily individual driver finish amt
+  - Display them on the DSP interface
 
 **\*\***Endpoint for the deployment is different than the endpoint for the local test
 

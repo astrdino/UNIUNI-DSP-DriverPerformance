@@ -6,8 +6,9 @@ import { DataGrid } from "@mui/x-data-grid";
 //Front-end
 import Button from "@mui/material/Button";
 
-import DSP_Greetings from "./DSP/DSP_Greetings";
+import DSP_dsp from "./DSP/DSP_dsp";
 import { DSP_DBstatus } from "./DSP/DSP_DBstatus";
+import { DSP_drvrMangmntt } from "./DSP/DSP_drvrMangmnt";
 import { DSP_DailyPerformance } from "./DSP/DSP_DailyPerformance";
 import DSP_DispatchAssign from "./DSP/DSP_DispatchAssign";
 import { DSP_Digest } from "./DSP/DSP_Digest";
@@ -23,7 +24,7 @@ function DSPMainPage() {
 
   return (
     <div className="DSP-COTNER">
-      <DSP_Greetings DSPdata={DSP} />
+      <DSP_dsp DSPdata={DSP} />
       <DSP_DBstatus />
       <DSP_DailyPerformance DSPname={DSP} />
       {DSP_Digest(DSP)}

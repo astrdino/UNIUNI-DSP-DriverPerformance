@@ -16,7 +16,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
 
 //Utility
-import { DSPs } from "./utility/Roles";
+import { Roles } from "./utility/Roles";
 
 //Auth
 
@@ -100,15 +100,17 @@ const HomePage = () => {
                   <MenuItem component={Link} to="login" key={0}>
                     PHX Warehouse
                   </MenuItem>
-                  {DSPs.map((DSP, index) => (
-                    <MenuItem
-                      value="/DSPMain"
-                      sel-value={DSP.name}
-                      key={index + 1}
-                    >
-                      {DSP.name}
-                    </MenuItem>
-                  ))}
+                  {Roles.map((role, index) =>
+                    role.name.includes("PHX") ? null : (
+                      <MenuItem
+                        value="/DSPMain"
+                        sel-value={role.name}
+                        key={index + 1}
+                      >
+                        {role.name}
+                      </MenuItem>
+                    )
+                  )}
 
                   {/* <MenuItem value="/DSPMain">Twenty</MenuItem>
                     <MenuItem value={30}>Thirty</MenuItem> */}
