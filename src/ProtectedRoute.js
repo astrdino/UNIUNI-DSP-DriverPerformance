@@ -1,31 +1,20 @@
-import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-
-// function ProtectedRoute({ component: Component, ...rest }) {
-//   const { user = {} } = useAuth() || {};
-
-//   // return (
-//   //   <Route
-//   //     {...rest}
-//   //     render={props =>
-//   //       user ? <Component {...props} /> : <Navigate to="/login" />
-//   //     }
-//   //   />
-//   // );
-// }
+import React from "react";
+import { Route, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
 
-  // console.log(user)
-  // console.log(children)
+  var location = useLocation();
+  var navigate = useNavigate;
+
+  var currentUser = location.state?.selData; // as string from selection
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return (
+      <Navigate to="/login" replace state={{ from: location, currentUser }} />
+    );
   }
-
-  
 
   return children;
 }

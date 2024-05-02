@@ -93,7 +93,8 @@ export const FetchData_SPBS = ()=>{
   
   
         } catch (error) {
-          alert(`Error fetching or reading Excel file: ${error.toString()}`)
+          alert(`Error fetching or 
+          ing Excel file: ${error.toString()}`)
           console.error();
           return null;
           

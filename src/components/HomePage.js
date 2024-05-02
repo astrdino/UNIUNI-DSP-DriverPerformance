@@ -53,7 +53,7 @@ const HomePage = () => {
   const handleChange = (event, child) => {
     var sel = child["props"]["sel-value"]; //Selected Name
     const path = event.target.value; //Application Path
-    // console.log(path);
+
     console.log(sel);
     console.log(path);
     setSelectedDSP_path(path);
@@ -82,13 +82,12 @@ const HomePage = () => {
           </div>
 
           <div className="Home-Login">
-            {/* <Button 
-                component = {Link}
-                to = 'login'
-                variant="contained">Login as Admin</Button> */}
-
-            <Box>
-              <FormControl sx={{ display: "flex" }} size="small">
+            <Box
+              sx={{
+                minWidth: 150,
+              }}
+            >
+              <FormControl sx={{ display: "flex" }}>
                 <InputLabel id="demo-simple-select-label">Login</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -96,8 +95,21 @@ const HomePage = () => {
                   value={selectedDSP_path}
                   label="DSP"
                   onChange={handleChange}
+                  sx={{
+                    boxShadow: " 5px 10px #888888",
+                    borderRadius: 2,
+                  }}
                 >
-                  <MenuItem component={Link} to="login" key={0}>
+                  {/* <MenuItem component={Link} to="login" key={0}>
+                    PHX Warehouse
+                  </MenuItem> */}
+                  <MenuItem
+                    value="/dashboard"
+                    sel-value={"test"}
+                    // to="DSPLogin"
+                    // component={Link}
+                    key={0}
+                  >
                     PHX Warehouse
                   </MenuItem>
                   {Roles.map((role, index) =>
@@ -106,6 +118,8 @@ const HomePage = () => {
                         value="/DSPMain"
                         sel-value={role.name}
                         key={index + 1}
+                        // component={Link}
+                        // to="DSPLogin"
                       >
                         {role.name}
                       </MenuItem>

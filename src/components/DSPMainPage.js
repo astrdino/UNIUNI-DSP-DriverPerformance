@@ -16,7 +16,7 @@ import { DSP_Digest } from "./DSP/DSP_Digest";
 function DSPMainPage() {
   var location = useLocation();
 
-  var DSP = location.state?.userDSP; //Get Current DSP Name
+  var DSP = location.state?.currentUser; //Get Current DSP Name
 
   // function gen218() {
   //   return <p>Fake List haha</p>;

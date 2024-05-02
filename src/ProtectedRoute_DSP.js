@@ -15,7 +15,7 @@ function ProtectedRoute_DSP({ children }) {
 
   if (!user) {
     return (
-      <Navigate to="/DSPLogin" replace state={{ from: location, userDSP }} /> //Navigate with extra data "Current DSP Name"
+      <Navigate to="/login" replace state={{ from: location, userDSP }} /> //Navigate with extra data "Current DSP Name"
     );
   }
 

@@ -33,6 +33,9 @@
 - ✅ Application Login
 - ✅ Application Access Control (Administration + A group of Delivery Service Partner)
 - ✅ Split Screen
+
+- Scalability
+  - New Area, New Route, New DSP
 - ▫️ Languages Switch
 
 ## Project Log
@@ -308,7 +311,42 @@
   - Fetch daily individual driver finish amt
   - Display them on the DSP interface
 
+### 04-26-2024
+
+🎁 To achieve behavior where a function exported from a module can influence the sttate of a parent component
+
+https://chat.openai.com/c/8b50846a-a4a4-468e-8a06-60f6f237d09d
+
+- In the project, output from module 'Admin2DSP_ReminderHandle.js' to impact the useState() value in order to control reRender in "adminMainTopBar.js"
+
+### 04-27-2024
+
+🎁 .pop() RETURNS the removed element
+
+- Finish first group email test, making up data package
+
+### 04-30-2024
+
+- Admin Dashboard, Sidebar, Upload files, orginized code - destruct big code block down to several components
+
+### 05-01-2024
+
+- "Log in" Code Clear Up
+
+  - Deprecated "DSPLoginPage". Instead, login for both Admin and DSP would be navigated to "LoginPage"
+
+- Side Bar
+  - Fix On/Off logical bug
+  - Fix height
+
 **\*\***Endpoint for the deployment is different than the endpoint for the local test
+
+## BugGang
+
+1.
+
+- "Select any"-> endpoint input "login"
+- Crap CSS
 
 /^&%&^%_&^&\*\*(&(_^&_%_&$$$*&*$$_$&&_^\*))/
 !![alt text](image-2.png)

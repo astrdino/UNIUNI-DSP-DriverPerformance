@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+//Deprecated since 05/01/2024
+
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth_DSP } from "../AuthContext";
 
@@ -46,6 +48,10 @@ function DSPLoginPage() {
   };
 
   var data = location.state?.selData;
+
+  useEffect(() => {
+    console.log(userDSP);
+  });
 
   return (
     // <div>
@@ -103,7 +109,7 @@ function DSPLoginPage() {
                 className="form__custom-button"
                 onClick={handleLogin}
               >
-                Log in
+                Log innn
               </Button>
             </form>
           </div>

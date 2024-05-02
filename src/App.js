@@ -9,7 +9,8 @@ import DSPLogin from "./components/DSPLoginPage";
 import Dashboard from "./components/DashboardPage";
 import DSPMain from "./components/DSPMainPage";
 import ProtectedRoute from "./ProtectedRoute";
-import ProtectedRoute_DSP from "./ProtectedRoute_DSP";
+//import ProtectedRoute_DSP from "./ProtectedRoute_DSP";
+import ProtectedRoute_LoginPrev from "./ProtectedRoute_LoginPrev";
 // import PrivateRoute from './PrivateRoute';
 
 import { AuthProvider } from "./AuthContext";
@@ -51,8 +52,15 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/DSPlogin" element={<DSPLogin />} />
+          <Route
+            path="/login"
+            element={
+              <ProtectedRoute_LoginPrev>
+                <Login />
+              </ProtectedRoute_LoginPrev>
+            }
+          />
+          {/* <Route path="/DSPlogin" element={<DSPLogin />} /> */}
           <Route
             path="/dashboard"
             element={
@@ -64,9 +72,9 @@ function App() {
           <Route
             path="/DSPMain"
             element={
-              <ProtectedRoute_DSP>
+              <ProtectedRoute>
                 <DSPMain />
-              </ProtectedRoute_DSP>
+              </ProtectedRoute>
             }
           />
 
